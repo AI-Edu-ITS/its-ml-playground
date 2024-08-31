@@ -16,11 +16,11 @@ This is the official source code from ITS Machine Learning Book Titled **Pembela
 
 You need to follow this tutorial below:
 
-1. [Section 1: Introduction](src/section1/section_1.md)
-2. [Section 2: Unsupervised](src/section2/section_2.md)
-3. [Section 3: Supervised](src/section3/section_3.md)
-4. [Section 4: Supervised Based on Function](src/section4/section_4.md)
-5. [Section 5: Semi-Supervised](src/section5/section_5.md)
+1. [Section 1: Introduction](section1/section_1.md)
+2. [Section 2: Unsupervised Learning](section2/section_2.md)
+3. [Section 3: Supervised Learning](section3/section_3.md)
+4. [Section 4: Supervised Based on Function Learning](section4/section_4.md)
+5. [Section 5: Semi-Supervised Learning](section5/section_5.md)
 
 ## 🙋 FAQ
 
