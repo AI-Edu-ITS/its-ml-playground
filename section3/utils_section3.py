@@ -17,7 +17,7 @@ from collections import Counter
     Input: vector 1, vector 2, type of disctance (default is euclidean distance), constant for minkowski distance
     Output: result of distance in floating point
 '''
-def calc_distance(vec1: list, vec2: list, type: str = 'euclid', p: int = 2) -> float:
+def calc_distance(vec1: list, vec2: list, type: str = 'euclid', p: int = 3) -> float:
     if type == 'euclid':
         return np.sqrt(np.sum((vec1 - vec2)**2))
     elif type == 'manhanttan':
