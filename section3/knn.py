@@ -4,12 +4,12 @@ import matplotlib.pyplot as plt
 from eval_supervised import calc_error_rate, calc_accuracy
 from utils_section3 import calc_distance
 
-'''
-    K-Nearest Neighbor (KNN) class. This class contains 3 methods which are the foundation of KNN, namely calculate distance,
-    finding nearest neighbour, and predict the new data location with its class. In KNN, we need to define number of neighbors
-    which represented as k_neighbours and which metric used to calculate the distance between data.
-'''
 class kNN():
+    '''
+        K-Nearest Neighbor (KNN) class. This class contains 3 methods which are the foundation of KNN, namely calculate distance,
+        finding nearest neighbour, and predict the new data location with its class. In KNN, we need to define number of neighbors
+        which represented as k_neighbours and which metric used to calculate the distance between data.
+    '''
     def __init__(self, k_neighbours: int = 3, dist_metric: str ='euclid', p: int = 3):
         self.k_neighbours = k_neighbours
         self.dist_metric = dist_metric
@@ -38,9 +38,6 @@ class kNN():
             preds.append(major)
         return np.array(preds)
 
-'''
-    Function for visualize performance of knn. we try to find the best value of k in terms of accuracy and error rate
-'''
 def visualize_knn_best_k(    
         x_train: np.ndarray, 
         y_train: np.ndarray, 
@@ -49,6 +46,9 @@ def visualize_knn_best_k(
         dist_metric: str,
         p: int
     ):
+    '''
+        Function for visualize performance of knn. we try to find the best value of k in terms of accuracy and error rate
+    '''
     error_list = []
     acc_list = []
     for i in range(1,40):
