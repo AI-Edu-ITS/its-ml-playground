@@ -1,6 +1,16 @@
 import numpy as np
 
 '''
+    Function to calculate Mean Square Error (MSE)
+
+    Input: list of predictions, y_test data
+    Output: mse in percent
+'''
+def calc_mse(preds: np.ndarray, y_test: np.ndarray) -> float:
+    mse = np.mean(np.square(y_test - preds))
+    return round(mse, 3)
+
+'''
     Function for calculate accuracy of prediction
 
     Input: list of predictions, y_test data
