@@ -32,20 +32,19 @@ def calc_distance(vec1: list, vec2: list, type: str = 'euclid', p: int = 3) -> f
     Input: dataset path, list of columns to process
     Output: x,y in tuple
 '''
-def load_csv_data(dataset_path: str, process_columns: list) -> tuple:
-    x_columns = len(process_columns) - 1
+def load_csv_data(dataset_path: str, x_columns: list, y_columns: str) -> tuple:
     df = pd.read_csv(dataset_path, sep=',', index_col=False) # read dataset first
-    classes = df['Region'].to_list() # we use region as classes
+    classes = df[y_columns].to_list() # we use region as classes
     classes = classes_to_int(classes)
     # use dataset based on new columns
-    new_df = df[process_columns]
+    new_df = df[x_columns]
     # fill data
     new_df = new_df.mask(new_df==0).fillna(round(new_df.mean(),5))
     dataset = np.array(new_df, dtype=float)
     class_data = np.array(classes, dtype=int)
     # data normalization
     # dataset_normalization(dataset)
-    x_data = dataset[:,:x_columns]
+    x_data = dataset
     y_data = class_data
     return x_data, y_data
 

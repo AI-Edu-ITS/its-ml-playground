@@ -1,9 +1,9 @@
 import argparse
-import numpy as np
 
 from eval_supervised import evaluation_report
 from knn import kNN, visualize_knn_best_k
-from regression import LinearRegression
+from naive_bayes import GaussianNaiveBayes
+from regression import SimpleLinearRegression, visualize_regression
 from utils_section3 import load_csv_data, train_test_split
 
 if __name__ == '__main__':
@@ -15,6 +15,7 @@ if __name__ == '__main__':
 
     # linear regression specific
     parser.add_argument('-lr', '--learning_rate', help='Define learning rate for Linear Regression', default=0.01, type=float)
+    parser.add_argument('-it', '--iteration', help='Define number of iteration for Linear Regression algorithm', default=1000, type=int)
     
     # knn specific
     parser.add_argument('-k', '--k_neighbours', help='Define number of k-neighbors for KNN algorithm', default=5, type=int)
@@ -27,22 +28,32 @@ if __name__ == '__main__':
 
     #define dataset
     # You can always change which columns you want to run (choose at least 2 columns with 1 column as y value)
-    x_columns = ['Family','Health (Life Expectancy)','Economy (GDP per Capita)','Freedom','Trust (Government Corruption)','Generosity']
-    x_data, y_data = load_csv_data(args.dataset, x_columns)
+    if args.algo != 'regression':
+        x_columns = ['Family','Health (Life Expectancy)','Economy (GDP per Capita)','Freedom','Trust (Government Corruption)','Generosity']
+    else:
+        x_columns = ['Freedom']
+    y_columns = 'Region'
+    x_data, y_data = load_csv_data(args.dataset, x_columns, y_columns)
     x_train, y_train, x_test, y_test = train_test_split(x_data, y_data, args.train_split)
     
     # choose prediction
     if args.mode == 'predict':
-        if args.algo == 'regression':
-            LinearRegression()
-        elif args.algo == 'knn':
+        if args.algo == 'regression': # for Linear Regression algorithm
+            lr_preds = SimpleLinearRegression()
+            lr_preds.fit(x_train, y_train)
+            result = lr_preds.predict(x_test)
+        elif args.algo == 'knn': # for K-Nearest Neighbor algorithm
             knn_preds = kNN(args.k_neighbours, args.dist_metric)
             knn_preds.fit(x_train, y_train)
             result = knn_preds.predict(x_test)
-            evaluation_report(args.algo, result, y_test)
+        elif args.algo == 'naive': # for Naïve Bayes algorithm
+            naive_preds = GaussianNaiveBayes()
+            naive_preds.fit(x_train, y_train, x_columns)
+            result = naive_preds.predict(x_test)
+        evaluation_report(args.algo, result, y_test)
     # choose visualize
     elif args.mode == 'vis':
         if args.algo == 'regression':
-            LinearRegression()
+            visualize_regression(x_train, y_train, x_test, y_test)
         elif args.algo == 'knn':
             visualize_knn_best_k(x_train, y_train, x_test, y_test, args.dist_metric, args.p_value)

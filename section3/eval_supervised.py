@@ -1,7 +1,7 @@
 import numpy as np
 
 '''
-    Function to calculate Mean Square Error (MSE)
+    Function to calculate Mean Square Error (MSE) for Linear Regression
 
     Input: list of predictions, y_test data
     Output: mse in percent
@@ -9,6 +9,27 @@ import numpy as np
 def calc_mse(preds: np.ndarray, y_test: np.ndarray) -> float:
     mse = np.mean(np.square(y_test - preds))
     return round(mse, 3)
+
+'''
+    Function to calculate Mean Average Percentage Error (MAPE) for Linear Regression
+
+    Input: list of predictions, y_test data
+    Output: mape in percent
+'''
+def calc_mape(preds: np.ndarray, y_test: np.ndarray) -> float:
+    mape = np.mean(np.abs((y_test - preds) / np.abs(y_test.mean())))
+    return round(mape, 3)
+
+'''
+    Function to calculate R-Squared Error for Linear Regression. this function needs
+    to calculate Sum of Squares of the Residuals (SSres) and calculate Sum of Squares Total (SStot)
+'''
+def calc_r2_square(preds: np.ndarray, y_test: np.ndarray) -> float:
+    y_test_mean = y_test.mean()
+    ssres = ((y_test - preds) ** 2).sum()
+    sstot = ((y_test - y_test_mean) ** 2).sum()
+    r2_square = 1 - (ssres/sstot)
+    return round(r2_square, 3)
 
 '''
     Function for calculate accuracy of prediction
@@ -77,11 +98,17 @@ def calc_confusion_matrix(preds: np.ndarray, y_test: np.ndarray) -> np.ndarray:
     Function for report the evaluation result of supervised algorithm
 '''
 def evaluation_report(algo: str, preds: np.ndarray, y_test: np.ndarray) -> float:
-    print(f'Evaluation Report For {algo} Algorithm')
-    print(f'Accuracy = {calc_accuracy(preds, y_test)} %')
-    print(f'Error Rate = {calc_error_rate(preds, y_test)} %')
-    print(f'F1-Score = {calc_f1score(preds, y_test)}')
-    print(f'Confusion Matrix =\n{calc_confusion_matrix(preds, y_test)}')
+    if algo != 'regression':
+        print(f'Evaluation Report For {algo} Algorithm')
+        print(f'Accuracy = {calc_accuracy(preds, y_test)} %')
+        print(f'Error Rate = {calc_error_rate(preds, y_test)} %')
+        print(f'F1-Score = {calc_f1score(preds, y_test)}')
+        print(f'Confusion Matrix =\n{calc_confusion_matrix(preds, y_test)}')
+    else: 
+        print(f'Evaluation Report For {algo} Algorithm')
+        print(f'MSE = {calc_mse(preds, y_test)}')
+        print(f'MAPE = {calc_mape(preds, y_test)}')
+        print(f'R2 Square = {calc_r2_square(preds, y_test)}')
 
 def compare_evaluation():
     return 0
