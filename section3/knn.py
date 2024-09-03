@@ -1,9 +1,16 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
+from eval_supervised import calc_error_rate, calc_accuracy
 from utils_section3 import calc_distance
 
+'''
+    K-Nearest Neighbor (KNN) class. This class contains 3 methods which are the foundation of KNN, namely calculate distance,
+    finding nearest neighbour, and predict the new data location with its class. In KNN, we need to define number of neighbors
+    which represented as k_neighbours and which metric used to calculate the distance between data.
+'''
 class kNN():
-    def __init__(self, k_neighbours=3, dist_metric='euclid', p=3):
+    def __init__(self, k_neighbours: int = 3, dist_metric: str ='euclid', p: int = 3):
         self.k_neighbours = k_neighbours
         self.dist_metric = dist_metric
         self.p = p
@@ -31,50 +38,35 @@ class kNN():
             preds.append(major)
         return np.array(preds)
 
-# import numpy as np
-
-# from sklearn.model_selection import train_test_split
-
-# from utils_section3 import load_csv_data
-
-# '''
-#     Function to get all nearest neighbours based on training data and its class
-
-#     Input: list of train data, list of train class, number of k
-#     Output: list of neighbours
-# '''
-# def get_neighbours(x_train: np.ndarray, y_train: np.ndarray, num_neighbors: int) -> list:
-#     dist = []
-#     neighbours = []
-#     for (train_data, train_class) in zip(x_train, y_train):
-#         temp_dist = calc_distance(train_data, train_class)
-#         dist.append((temp_dist, train_class))
-#     dist.sort(key=lambda x: x[0])
-#     for i in range(num_neighbors):
-#         neighbours.append(dist[i][1])
-#     return neighbours
-
-# def preds_knn(x_test: np.ndarray):
-#     preds = []
-#     for test_data in x_test:
-#         neighbours = get_neighbours(test_data)
-
-# '''
-#     Function to implement knn algorithm
-# '''
-# def knn(dataset_path: str, train_size: float, num_neighbors: int) -> list:
-#     # You can always change which columns you want to run (choose at least 2 columns with 1 column as y value)
-#     process_columns = ['Family','Health (Life Expectancy)','Economy (GDP per Capita)','Happiness Score']
-#     x_data, y_data, class_data = load_csv_data(dataset_path, process_columns)
-#     print(class_data)
-#     # split dataset
-#     x_train, y_train, x_test, y_test = train_test_split(x_data, y_data, test_size=0.3)
-#     print(type(x_train))
-
-
-
-# #     # # compare first
-# #     # x_train, x_test, y_train, y_test = tr(x_data, y_data, test_size=0.3)
-# #     # x_train_1, y_train_1, x_test_1, y_test_1 = train_test_split(x_data, y_data, 0.7)
-# #     # print(f'sklearn split = {len(x_train)}, {len(y_train)}, {len(x_test)}, {len(y_test)}')
-# #     # print(f'from sratch split = {len(x_train_1)}, {len(y_train_1)}, {len(x_test_1)}, {len(y_test_1)}')
+'''
+    Function for visualize performance of knn. we try to find the best value of k in terms of accuracy and error rate
+'''
+def visualize_knn_best_k(    
+        x_train: np.ndarray, 
+        y_train: np.ndarray, 
+        x_test: np.ndarray, 
+        y_test: np.ndarray, 
+        dist_metric: str,
+        p: int
+    ):
+    error_list = []
+    acc_list = []
+    for i in range(1,40):
+        knn = kNN(i, dist_metric, p)
+        knn.fit(x_train, y_train)
+        preds = knn.predict(x_test)
+        error_list.append(calc_error_rate(preds, y_test))
+        acc_list.append(calc_accuracy(preds,y_test))
+    # plot graph error rate and acc rate
+    _, (ax_acc, ax_err) = plt.subplots(2,1,constrained_layout=True)
+    # plot acc
+    ax_acc.plot(range(1,40),acc_list,color='red',linestyle='dashed',marker='o',markerfacecolor='green')
+    ax_acc.set_title('Accuracy vs K-Val')
+    plt.setp(ax_acc, xlabel='K-Val', ylabel='Accuracy')
+    print(f'Best Accuracy = {max(acc_list)} when K = {acc_list.index(max(acc_list))}')
+    # plot error
+    ax_err.plot(range(1,40),error_list,color='red',linestyle='dashed',marker='o',markerfacecolor='blue')
+    ax_err.set_title('Error Rate vs K-Val')
+    plt.setp(ax_err, xlabel='K-Val', ylabel='Error Rate')
+    print(f'Best Error Rate = {min(error_list)} when K = {error_list.index(min(error_list))}')
+    plt.show()

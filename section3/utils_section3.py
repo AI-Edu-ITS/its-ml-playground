@@ -1,6 +1,7 @@
 import math
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 import pandas as pd
 
 from collections import Counter
@@ -20,7 +21,7 @@ from collections import Counter
 def calc_distance(vec1: list, vec2: list, type: str = 'euclid', p: int = 3) -> float:
     if type == 'euclid':
         return np.sqrt(np.sum((vec1 - vec2)**2))
-    elif type == 'manhanttan':
+    elif type == 'manhattan':
         return np.sum(np.abs(vec1 - vec2))
     elif type ==  'minkowski':
         return np.sum(np.abs(vec1 - vec2)**p) ** (1/p)
@@ -78,13 +79,3 @@ def train_test_split(x_data: np.ndarray, y_data: np.ndarray, train_size: float =
     x_test = x_data[~split]
     y_test = y_data[~split]
     return x_train, y_train, x_test, y_test
-
-'''
-    Function for visualize your dataset
-
-    Input: x and y data
-    Output: Showing plot in scatter manner
-'''
-def vis_dataset(x_data: np.ndarray, y_data: np.ndarray, labels: list):
-    plt.scatter(x_data[:,0], y_data)
-    plt.show()

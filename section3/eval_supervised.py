@@ -7,8 +7,18 @@ import numpy as np
     Output: accuracy value in percent
 '''
 def calc_accuracy(preds: np.ndarray, y_test: np.ndarray) -> float:
-    acc = np.sum(np.equal(y_test, preds)) / len(y_test)
-    return round(100 * acc, 3)
+    acc = np.sum(np.equal(preds, y_test)) / len(y_test)
+    return round(acc, 3)
+
+'''
+    Function for calculate error rate in prediction
+
+    Input: list of predictions, y_test data
+    Output: error rate value in percent
+'''
+def calc_error_rate(preds: np.ndarray, y_test: np.ndarray) -> float:
+    error_rate = np.sum(np.not_equal(preds, y_test)) / len(y_test)
+    return round(error_rate, 3)
 
 '''
     Function for calculate precision with equation -> precision = TP / (TP + FP)
@@ -59,6 +69,7 @@ def calc_confusion_matrix(preds: np.ndarray, y_test: np.ndarray) -> np.ndarray:
 def evaluation_report(algo: str, preds: np.ndarray, y_test: np.ndarray) -> float:
     print(f'Evaluation Report For {algo} Algorithm')
     print(f'Accuracy = {calc_accuracy(preds, y_test)} %')
+    print(f'Error Rate = {calc_error_rate(preds, y_test)} %')
     print(f'F1-Score = {calc_f1score(preds, y_test)}')
     print(f'Confusion Matrix =\n{calc_confusion_matrix(preds, y_test)}')
 
