@@ -16,9 +16,9 @@ class SimpleLinearRegression():
         y_train_mean = y_train.mean()
 
         # calculate slope & intercept
-        numerator = np.sum((x_train - x_train_mean) * (y_train - y_train_mean))
-        denominator = np.sum((x_train - x_train_mean) ** 2)
-        self.slope = numerator / denominator
+        num = np.sum((x_train - x_train_mean) * (y_train - y_train_mean))
+        denom = np.sum((x_train - x_train_mean) ** 2)
+        self.slope = num / denom
         self.intercept = y_train_mean - self.slope * x_train_mean
     
     def predict(self, x_test: np.ndarray):

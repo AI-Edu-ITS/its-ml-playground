@@ -53,7 +53,7 @@ if __name__ == '__main__':
             result = knn_preds.predict(x_test)
         elif args.algo == 'naive': # for Naïve Bayes algorithm
             naive_preds = GaussianNaiveBayes()
-            naive_preds.fit(x_train, y_train, x_columns)
+            naive_preds.fit(x_train, y_train)
             result = naive_preds.predict(x_test)
         evaluation_report(args.algo, result, y_test)
     # choose visualize

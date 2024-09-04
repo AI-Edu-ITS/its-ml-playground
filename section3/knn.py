@@ -30,7 +30,7 @@ class kNN():
             neighbours.append(dist[i][1])
         return neighbours
 
-    def predict(self, x_test: np.ndarray):
+    def predict(self, x_test: np.ndarray) -> np.array:
         preds = []
         for test_data in x_test:
             nearest = self.get_neighbours(test_data)
