@@ -1,10 +1,14 @@
 import argparse
+import sys
+import os
 
-from eval_supervised import evaluation_report
+sys.path.insert(0, os.getcwd())
+
+from tools.classification_metrics import evaluation_report
 from knn import kNN, visualize_knn_best_k
 from naive_bayes import GaussianNaiveBayes
 from regression import SimpleLinearRegression, MultiLinearRegression, visualize_simple_regression
-from utils_section3 import load_csv_data, train_test_split
+from tools.utils import load_csv_data, train_test_split
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('Section 3 Argument Parser')
