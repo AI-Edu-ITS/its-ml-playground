@@ -1,8 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import os
+import sys
 
-from eval_supervised import calc_error_rate, calc_accuracy
-from utils_section3 import calc_distance
+# enable import from another directory
+sys.path.insert(0, os.getcwd())
+
+from tools.classification_metrics import calc_error_rate, calc_accuracy
+from tools.utils import calc_distance
 
 class kNN():
     '''

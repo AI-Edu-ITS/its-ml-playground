@@ -27,7 +27,7 @@ class GaussianNaiveBayes():
 
     def fit(self, x_train: np.ndarray, y_train: np.ndarray):
         n_samples, n_features = x_train.shape
-        self.classes = np.unique(y_train)
+        self.classes = np.bincount(y_train)
         self.num_classes = len(self.classes)
         # define new empty-zero matrix with size num_classes x num_features and it should store float data type 32 bit
         self.mean = np.zeros((self.num_classes, n_features), dtype=np.float32)

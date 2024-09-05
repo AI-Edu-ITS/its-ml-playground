@@ -5,6 +5,7 @@ import os
 sys.path.insert(0, os.getcwd())
 
 from tools.classification_metrics import evaluation_report
+from decision_tree import DecisionTree
 from knn import kNN, visualize_knn_best_k
 from naive_bayes import GaussianNaiveBayes
 from regression import SimpleLinearRegression, MultiLinearRegression, visualize_simple_regression
@@ -23,6 +24,10 @@ if __name__ == '__main__':
     
     # knn specific
     parser.add_argument('-k', '--k_neighbours', help='Define number of k-neighbors for KNN algorithm', default=5, type=int)
+
+    # decision tree specific
+    parser.add_argument('-cr', '--criterion', help='Define criterion for decision tree (entropy, gini, log_loss)', default='gini', type=str)
+    parser.add_argument('-md', '--max_depth', help='Define maximum depth for node tree in decision tree', default=5, type=int)
 
     # misc
     parser.add_argument('-dm', '--dist_metric', help='Distance metric used (euclid, manhattan, minkowski)', type=str, default='euclid')
@@ -59,6 +64,10 @@ if __name__ == '__main__':
             naive_preds = GaussianNaiveBayes()
             naive_preds.fit(x_train, y_train)
             result = naive_preds.predict(x_test)
+        elif args.algo == 'tree': # for Decision Tree algorithm
+            tree_preds = DecisionTree(args.criterion, args.max_depth)
+            tree_preds.fit(x_train, y_train)
+            result = tree_preds.predict(x_test)
         evaluation_report(args.algo, result, y_test)
     # choose visualize
     elif args.mode == 'vis':
