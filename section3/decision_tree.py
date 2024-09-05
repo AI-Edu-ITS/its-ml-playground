@@ -1,8 +1,8 @@
 import numpy as np
 
-class DecisionTree():
+class DecisionTreeClassifier():
     '''
-        Class for Decision Tree algorithm. Using node approach to create tree. there are 3 type of criterion which can be chosen namely entropy, gini, and missclassification error.
+        Class for Decision Tree Classifier algorithm. Using node approach to create tree. there are 3 type of criterion which can be chosen namely entropy, gini, and missclassification error.
         entropy criterion or called log loss criterion purpose is to measure impurity in decision tree, while gini critertion purpose is to minimize the probability of miscclasification.
 
         We calculate entropy criterion or log loss criterion as follow -> entropy = sum((-class_probability) * (log2(class_probability)))
@@ -24,11 +24,11 @@ class DecisionTree():
     def construct_node_tree(self, dataset: np.ndarray, node_depth: int):
         x_data = dataset[:,:-1]
         y_data = dataset[:,-1]
-        rows, cols = x_data.shape
+        _, cols = x_data.shape
 
         # check is depth equal or less than maximum depth defined before
         if node_depth <= self.max_depth:
-            temp_data = self.split_left_right_data(rows, cols, dataset)
+            temp_data = self.split_left_right_data(cols, dataset)
             if temp_data['gain'] > 0:
                 left_node_tree = self.construct_node_tree(temp_data['left_data'], node_depth + 1)
                 right_node_tree = self.construct_node_tree(temp_data['right_data'], node_depth + 1)
@@ -43,7 +43,7 @@ class DecisionTree():
         leaf_y_data = list(y_data)
         return Node(value_leaf_node=max(leaf_y_data, key=leaf_y_data.count))
     
-    def split_left_right_data(self, rows: int, cols: int, dataset: np.ndarray) -> dict:
+    def split_left_right_data(self, cols: int, dataset: np.ndarray) -> dict:
         temp_data = {}
         # init temp data key first
         temp_data['col_idx'] = -1

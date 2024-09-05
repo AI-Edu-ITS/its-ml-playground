@@ -27,13 +27,13 @@ class GaussianNaiveBayes():
 
     def fit(self, x_train: np.ndarray, y_train: np.ndarray):
         n_samples, n_features = x_train.shape
-        self.classes = np.bincount(y_train)
+        self.classes = np.unique(y_train)
         self.num_classes = len(self.classes)
-        # define new empty-zero matrix with size num_classes x num_features and it should store float data type 32 bit
-        self.mean = np.zeros((self.num_classes, n_features), dtype=np.float32)
-        self.variance = np.zeros((self.num_classes, n_features), dtype=np.float32)
-        # define new empty-zero matrix for store prior probability value 
-        self.priors = np.zeros(self.num_classes, dtype=np.float32)
+        # define new empty-one matrix with size num_classes x num_features and it should store float data type 32 bit
+        self.mean = np.ones((self.num_classes, n_features), dtype=np.float32)
+        self.variance = np.ones((self.num_classes, n_features), dtype=np.float32)
+        # define new empty-one matrix for store prior probability value 
+        self.priors = np.ones(self.num_classes, dtype=np.float32)
 
         for i, c in enumerate(self.classes):
             temp_x_class = x_train[np.equal(y_train, c)]

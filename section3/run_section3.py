@@ -5,7 +5,7 @@ import os
 sys.path.insert(0, os.getcwd())
 
 from tools.classification_metrics import evaluation_report
-from decision_tree import DecisionTree
+from decision_tree import DecisionTreeClassifier
 from knn import kNN, visualize_knn_best_k
 from naive_bayes import GaussianNaiveBayes
 from regression import SimpleLinearRegression, MultiLinearRegression, visualize_simple_regression
@@ -65,7 +65,7 @@ if __name__ == '__main__':
             naive_preds.fit(x_train, y_train)
             result = naive_preds.predict(x_test)
         elif args.algo == 'tree': # for Decision Tree algorithm
-            tree_preds = DecisionTree(args.criterion, args.max_depth)
+            tree_preds = DecisionTreeClassifier(args.criterion, args.max_depth)
             tree_preds.fit(x_train, y_train)
             result = tree_preds.predict(x_test)
         evaluation_report(args.algo, result, y_test)
