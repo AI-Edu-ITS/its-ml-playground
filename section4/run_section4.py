@@ -6,7 +6,7 @@ import sys
 sys.path.insert(0, os.getcwd())
 
 from ann import MLPClassifier
-from logistic_regression import LogisticRegression, MultiLogisticRegression
+from logistic_regression import LogisticRegression, MultiLogisticRegression, visualize_logits_loss
 from tools.classification_metrics import evaluation_report
 from tools.utils import load_csv_data, train_test_split
 
@@ -18,6 +18,7 @@ if __name__ == '__main__':
     parser.add_argument('-d', '--dataset', help='Define Dataset Path', required=True, type=str)
     parser.add_argument('-a', '--algo', help='Run specific algo (logistic, svm, ann)', type=str)
     parser.add_argument('-ts', '--train_split', help='Define training percentage over testing percentage', default=0.7, type=float)
+    parser.add_argument('-v', '--verbose', help='Define is log printed in console or not', default=False, type=bool)
 
     # logistic regression args
     parser.add_argument('-lr', '--learning_rate', help='Define learning rate for Logistic Regression', default=0.01, type=float)
@@ -36,13 +37,19 @@ if __name__ == '__main__':
     if args.mode == 'predict':
         # WARNING: USE LOGISTIC REGRESSION ONLY FOR 2 CLASS PREDICTION!!!
         if args.algo == 'logistic':
-            logits_preds = LogisticRegression(args.learning_rate, args.iter, args.epsilon)
+            logits_preds = LogisticRegression(args.learning_rate, args.iter, args.epsilon, args.verbose)
             logits_preds.fit(x_train, y_train)
             result = logits_preds.predict(x_test)
         elif args.algo == 'multi_logistic':
-            multi_logits_preds = MultiLogisticRegression(args.learning_rate, args.iter)
+            multi_logits_preds = MultiLogisticRegression(args.learning_rate, args.iter, verbose=args.verbose)
             multi_logits_preds.fit(x_train, y_train)
             result = multi_logits_preds.predict(x_test)
+            print(multi_logits_preds.loss_list)
         elif args.algo == 'ann':
             ann_preds = MLPClassifier()
         evaluation_report(args.algo, result, y_test)
+    elif args.mode =='vis':
+        if args.algo == 'logistic' or args.algo == 'multi_logistic':
+            multi_logits_preds = MultiLogisticRegression(args.learning_rate, args.iter)
+            multi_logits_preds.fit(x_train, y_train)
+            visualize_logits_loss(multi_logits_preds.loss_list)
