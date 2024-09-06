@@ -93,7 +93,7 @@ def calc_f1score(preds: np.ndarray, y_test: np.ndarray):
         precision_score = 1
         recall_score = 1
         f1_score = 1
-    elif false_negative == 0 or false_positive == 0 and true_positive == 0:
+    elif false_negative == 0 or false_positive == 0 or true_positive == 0:
         precision_score = 0
         recall_score = 0
         f1_score = 0
