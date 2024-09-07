@@ -1,6 +1,6 @@
 import argparse
 
-from datasets import download_whr_datasets, load_whr_datasets, sort_whr_datasets, simplify_classes
+from datasets import download_datasets, load_dataset, sort_dataset, simplify_whr_classes
 # from section1.visualize import b
 
 if __name__ == '__main__':
@@ -15,9 +15,9 @@ if __name__ == '__main__':
 
     # execute command
     if args.mode == 'download':
-        download_whr_datasets()
-        simplify_classes('./dataset/temp_dataset.csv')
+        download_datasets()
+        simplify_whr_classes('./dataset/temp_dataset_whr.csv')
     elif args.mode == 'show':
-        load_whr_datasets(args.dataset)
+        load_dataset(args.dataset)
     elif args.mode == 'sort':
-        sort_whr_datasets(args.dataset, args.type_sort, args.column)
+        sort_dataset(args.dataset, args.type_sort, args.column)

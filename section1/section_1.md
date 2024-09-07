@@ -48,7 +48,10 @@ python3 section1/run_section1.py --mode sort --dataset ./dataset/whr_dataset.csv
 
 ## 📁 Dataset Explanation
 
-This repository uses World Happiness Report Dataset from [Kaggle Website](https://www.kaggle.com/datasets/unsdsn/world-happiness?resource=download&select=2016.csv). This dataset contains 13 columns to described the world happiness report based on several parameters.
+There are 2 datasets used in this repository namely **World Happiness Report Dataset (for classification)** and **Shop Customer Data (for clustering)**:
+
+- This repository uses World Happiness Report Dataset from [Kaggle Website Classification](https://www.kaggle.com/datasets/unsdsn/world-happiness?resource=download&select=2016.csv). This dataset contains 13 columns to described the world happiness report based on several parameters for 157 rows.
+- This repository also uses Shop Customer Dataset from [Kaggle Website Clustering](https://www.kaggle.com/datasets/datascientistanna/customers-dataset). This dataset contains 8 columns to describe customer data who visits the shop with 2000 rows in total.
 
 ## 📚 Libraries Used in This Repository
 
