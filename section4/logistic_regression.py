@@ -6,7 +6,7 @@ import sys
 # Enable import from other directory
 sys.path.insert(0, os.getcwd())
 
-from tools.activations import sigmoid_activation, softmax_activation
+from tools.activations import sigmoid_activation
 from tools.loss import log_loss, categorical_cross_entropy_loss
 
 class LogisticRegression():
@@ -92,8 +92,12 @@ class MultiLogisticRegression():
 
     def calc_gradient_descent(self, x_test: np.ndarray) -> np.ndarray:
         temp_preds = np.dot(x_test, self.weights.T).reshape(-1,len(self.classes))
-        final_preds = softmax_activation(temp_preds)
+        final_preds = self.calc_softmax(temp_preds)
         return final_preds
+    
+    def calc_softmax(self, x_data: np.ndarray) -> np.ndarray:
+        temp_exp = np.exp(x_data)
+        return temp_exp / np.sum(temp_exp, axis=1).reshape(-1,1)
 
     def predict(self, x_test: np.ndarray):
         x_test = np.insert(x_test, 0, 1, axis=1)
