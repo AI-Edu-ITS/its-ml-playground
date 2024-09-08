@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import numpy as np
 
 class SVM():
@@ -24,15 +25,20 @@ class SVM():
                 if y_train[idx] * (np.dot(x, self.weight) - self.bias) >= 1:
                     d_weight = 2 * self.regularization * self.weight
                     d_bias = 0
-                    self.weight -= self.lr * d_weight
                 else:
                     d_weight = 2 * self.regularization * self.weight - np.dot(x, y_train[idx])
                     d_bias = y_train[idx]
-                    self.weight -= self.lr * d_weight
-                    self.bias -= self.lr * d_bias
+                self.weight -= self.lr * d_weight
+                self.bias -= self.lr * d_bias
 
     def predict(self, x_test: np.ndarray) -> np.ndarray:
         # get the outputs
         output = np.dot(x_test, self.weight) - self.bias
         preds = [1 if val > 0 else -1 for val in output]
         return np.array(preds)
+
+def visualize_svm_result(x_data: np.ndarray, y_data: np.ndarray, weight: np.ndarray, bias: np.ndarray):
+    fig = plt.figure()
+
+def hyperplane(x_data: np.ndarray, weight: np.ndarray, bias: np.ndarray, offset: int):
+    return (-weight[0] * x_data + bias + offset) / weight[1]

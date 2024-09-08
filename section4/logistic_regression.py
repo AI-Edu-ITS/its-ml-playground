@@ -6,7 +6,6 @@ import sys
 # Enable import from other directory
 sys.path.insert(0, os.getcwd())
 
-from tools.activations import sigmoid_activation
 from tools.loss import log_loss, categorical_cross_entropy_loss
 
 class LogisticRegression():
@@ -36,7 +35,7 @@ class LogisticRegression():
         for i in range(self.iter):
             temp_class_pred = np.dot(x_train, self.weight) + self.bias
             # apply sigmoid activation
-            y_pred = sigmoid_activation(temp_class_pred)
+            y_pred = self.sigmoid_activation(temp_class_pred)
             d_weight = 1 / float(n_samples) * np.dot(x_train.T, (y_pred - y_train))
             d_bias = 1 / float(n_samples) * np.sum((y_pred - y_train))
             self.weight -= self.lr * d_weight
@@ -50,8 +49,11 @@ class LogisticRegression():
 
     def predict(self, x_test: np.ndarray) -> np.ndarray:
         temp_y = np.dot(x_test, self.weight) + self.bias
-        y_preds = sigmoid_activation(temp_y) >= self.threshold
+        y_preds = self.sigmoid_activation(temp_y) >= self.threshold
         return np.array(y_preds)
+    
+    def sigmoid_activation(self, x_data: np.ndarray) -> np.ndarray:
+        return 1. / (1. + np.exp(-x_data)).reshape(-1,1)
 
 class MultiLogisticRegression():
     '''
