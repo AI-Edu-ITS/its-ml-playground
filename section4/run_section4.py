@@ -1,14 +1,15 @@
 import argparse
+import numpy as np
 import os
 import sys
 
 # Enable import from another directory
 sys.path.insert(0, os.getcwd())
 
-from ann import MLPClassifier
+from ann import MLPClassifier, visualize_loss
 from logistic_regression import LogisticRegression, MultiLogisticRegression, visualize_logits_loss
 from svm import SVM
-from tools.classification_metrics import evaluation_report
+from tools.classification_metrics import evaluation_report, calc_accuracy
 from tools.utils import load_csv_data, train_test_split
 
 from sklearn.svm import SVC
@@ -20,7 +21,7 @@ if __name__ == '__main__':
     parser.add_argument('-a', '--algo', help='Run specific algo (logistic, multi_logistic, svm, ann)', type=str)
     parser.add_argument('-ts', '--train_split', help='Define training percentage over testing percentage', default=0.7, type=float)
     parser.add_argument('-v', '--verbose', help='Define is log printed in console or not', default=False, type=bool)
-    parser.add_argument('-it', '--iter', help='Define number of iteration or epoch', default=100, type=int)
+    parser.add_argument('-it', '--iter', help='Define number of iteration or epoch', default=36, type=int)
     parser.add_argument('-bs', '--batch_size', help='Define batch size for process', default=32, type=int)
     parser.add_argument('-rs', '--random_seed', help='Define random seed for initialization', default=42, type=int)
 
@@ -32,9 +33,8 @@ if __name__ == '__main__':
     parser.add_argument('-rg', '--regularization', help='Define regularization', default=0.01, type=float)
 
     # ann args
-    parser.add_argument('-is', '--input_size', help='Define input size of the network', default=2, type=int)
     parser.add_argument('-hs', '--hidden_size', help='Define hidden size of the network', default=4, type=int)
-    parser.add_argument('-os', '--output_size', help='Define output size of the network', default=1, type=int)
+    parser.add_argument('-ac', '--activation', help='Define activation in mlp (sigmoid, relu, tanh)', default='relu', type=str)
 
     args = parser.parse_args()
 
@@ -61,7 +61,12 @@ if __name__ == '__main__':
             result = multi_logits_preds.predict(x_test)
             print(multi_logits_preds.loss_list)
         elif args.algo == 'ann':
-            ann_preds = MLPClassifier()
+            input_size = x_train.shape[1]
+            output_size = len(np.unique(y_train))
+            ann_preds = MLPClassifier(input_size, args.hidden_size, output_size, args.learning_rate, args.iter, -1, -1, args.activation)
+            ann_preds.fit(x_train, y_train)
+            result = ann_preds.predict(x_test)
+            print(result)
         # WARNING: SVM IN HERE IS BINARY CLASSIFICATION WHICH ONLY CAN PREDICT 2 CLASS!!!
         elif args.algo == 'svm':
             svm_preds = SVM(args.iter, args.learning_rate, args.random_seed, args.regularization)
@@ -73,3 +78,17 @@ if __name__ == '__main__':
             multi_logits_preds = MultiLogisticRegression(args.learning_rate, args.iter)
             multi_logits_preds.fit(x_train, y_train)
             visualize_logits_loss(multi_logits_preds.loss_list)
+        elif args.algo == 'svm':
+            svm_preds = SVM(args.iter, args.learning_rate, args.random_seed, args.regularization)
+            svm_preds.fit(x_train, y_train)
+            result = svm_preds.predict(x_test)
+            acc_score = calc_accuracy(result, y_test)
+            weight = svm_preds.weight
+            bias = svm_preds.bias
+        elif args.algo == 'ann':
+            input_size = x_train.shape[1]
+            output_size = len(np.unique(y_train))
+            ann_preds = MLPClassifier(input_size, args.hidden_size, output_size, args.learning_rate, args.iter, -1, -1, args.activation)
+            ann_preds.fit(x_train, y_train)
+            # result = ann_preds.predict(x_test)
+            visualize_loss(ann_preds.epoch_list, ann_preds.error_list)
