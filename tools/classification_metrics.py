@@ -17,7 +17,7 @@ def calc_mae(preds: np.ndarray, y_test: np.ndarray) -> float:
 
         Input: list of predictions, y_test data
         
-        Output: mape result
+        Output: mae result
     '''
     mape = np.mean(np.abs((y_test - preds)))
     return round(mape, 3)
@@ -37,6 +37,25 @@ def calc_r2_square(preds: np.ndarray, y_test: np.ndarray) -> float:
     r2_square = 1 - (ssres/sstot)
     return round(r2_square, 3)
 
+def calc_sse(preds: np.ndarray, y_test: np.ndarray) -> float:
+    '''
+        Function to calculate Sum of Square Errors (SSE), the sum of squared differences 
+        between predicted data points and observed data points.
+    '''
+    return round(np.sum(np.square(preds - y_test)), 3)
+
+def calc_ssr(preds: np.ndarray, y_test: np.ndarray) -> float:
+    '''
+        Function to calculate Sum of Square Regression (SSR), The sum of squared differences 
+        between predicted data points and the mean of the response variable.
+    '''
+    return round(np.sum(np.square(preds - np.mean(y_test))), 3)
+
+def calc_sst(preds: np.ndarray, y_test: np.ndarray) -> float:
+    ssr = calc_ssr(preds, y_test)
+    sse = calc_sse(preds, y_test)
+    return round(sse + ssr, 3)
+
 def calc_accuracy(preds: np.ndarray, y_test: np.ndarray) -> float:
     '''
         Function for calculate accuracy of prediction
@@ -46,7 +65,7 @@ def calc_accuracy(preds: np.ndarray, y_test: np.ndarray) -> float:
         Output: accuracy result
     '''
     acc = np.sum(np.equal(preds, y_test)) / len(y_test)
-    return round(acc, 3)
+    return round(acc * 100, 3)
 
 def calc_error_rate(preds: np.ndarray, y_test: np.ndarray) -> float:
     '''
@@ -57,7 +76,7 @@ def calc_error_rate(preds: np.ndarray, y_test: np.ndarray) -> float:
         Output: error rate result
     '''
     error_rate = np.sum(np.not_equal(preds, y_test)) / len(y_test)
-    return round(error_rate, 3)
+    return round(error_rate * 100, 3)
 
 def calc_precision(false_positive: float, true_positive: float) -> float:
     '''
@@ -117,6 +136,33 @@ def calc_confusion_matrix(preds: np.ndarray, y_test: np.ndarray) -> np.ndarray:
     false_positive = ((y_test == 0) & (preds == 1)).sum()
     return np.array([[true_negative, false_positive], [false_negative, true_positive]])
 
+def calc_auc_score(preds: np.ndarray, y_test: np.ndarray):
+    '''
+        Function for calculate Area Under the Curve (AUC) Score. AUC represents the overall performance 
+        of a classifier by measuring the area under the Receiver Operating Characteristic (ROC) curve.
+        To compute the AUC score, the ROC curve is created by calculating the TPR and FPR values at different 
+        classification thresholds.
+    '''
+    # init true positive rate (TPR) and false positive rate (FPR) list
+    tpr_list = []
+    fpr_list = []
+    # sort data first
+    sort_y_preds_indices = np.argsort(-preds)
+    sort_y_test = y_test[sort_y_preds_indices]
+    # total number positive & negative
+    num_positive = np.sum(np.equal(sort_y_test, 1))
+    num_negative = np.sum(np.equal(sort_y_test, 0))
+    cum_tp = np.cumsum(np.equal(sort_y_test, 1))
+    cum_fp = np.cumsum(np.not_equal(sort_y_test, 1))
+    
+    tpr = cum_tp / num_positive
+    fpr = cum_fp / num_negative
+
+    tpr_list.append(tpr)
+    fpr_list.append(fpr)
+        
+    return np.trapz(tpr_list, fpr_list)
+
 def evaluation_report(algo: str, preds: np.ndarray, y_test: np.ndarray) -> float:
     '''
         Function for report the evaluation result of supervised algorithm
@@ -129,6 +175,7 @@ def evaluation_report(algo: str, preds: np.ndarray, y_test: np.ndarray) -> float
         print(f'Evaluation Report For {algo} Algorithm')
         print(f'Accuracy = {calc_accuracy(preds, y_test)} %')
         print(f'Error Rate = {calc_error_rate(preds, y_test)} %')
+        print(f'AUC Score = {calc_auc_score(preds, y_test)}')
         precision, recall, f1score = calc_f1score(preds, y_test)
         print(f'Precision = {precision}')
         print(f'Recall = {recall}')
@@ -139,6 +186,9 @@ def evaluation_report(algo: str, preds: np.ndarray, y_test: np.ndarray) -> float
         print(f'MSE = {calc_mse(preds, y_test)}')
         print(f'RMSE = {round(np.sqrt(calc_mse(preds, y_test)), 3)}')
         print(f'MAE = {calc_mae(preds, y_test)}')
+        print(f'SSE = {calc_sse(preds, y_test)}')
+        print(f'SSR = {calc_ssr(preds, y_test)}')
+        print(f'SST = {calc_sst(preds, y_test)}')
         print(f'R2 Square = {calc_r2_square(preds, y_test)}')
 
 def compare_evaluation():
