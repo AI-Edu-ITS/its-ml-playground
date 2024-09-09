@@ -67,3 +67,15 @@ def visualize_simple_regression(x_train: np.ndarray, y_train: np.ndarray, x_test
     plt.xlabel('X-Test Data')
     plt.ylabel('Prediction Res')
     plt.show()
+
+def visualize_multi_regression(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarray, y_test: np.ndarray):
+    lr_preds = MultiLinearRegression()
+    lr_preds.fit(x_train, y_train)
+    result = lr_preds.predict(x_test)
+
+    # plot scatter
+    plt.scatter(y_test, result, label='Value')
+    # plt.plot(x_test, result, color='red', marker='o', label='Multi Linear Regression Line')
+    plt.xlabel('Test Data')
+    plt.ylabel('Prediction Data')
+    plt.show()

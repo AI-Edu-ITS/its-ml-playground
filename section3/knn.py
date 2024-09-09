@@ -15,7 +15,7 @@ class kNN():
         finding nearest neighbour, and predict the new data location with its class. In KNN, we need to define number of neighbors
         which represented as k_neighbours and which metric used to calculate the distance between data.
     '''
-    def __init__(self, k_neighbours: int = 3, dist_metric: str ='euclid', p: int = 3):
+    def __init__(self, k_neighbours: int = 5, dist_metric: str ='euclid', p: int = 3):
         self.k_neighbours = k_neighbours
         self.dist_metric = dist_metric
         self.p = p
@@ -23,6 +23,8 @@ class kNN():
     def fit(self, x_train: np.ndarray, y_train: np.ndarray):
         self.x_train = x_train
         self.y_train = y_train
+        self.classes = np.unique(self.y_train)
+        self.num_classes = len(self.classes)
     
     def get_neighbours(self, test_data) -> list:
         dist = []
@@ -42,6 +44,14 @@ class kNN():
             major = max(set(nearest), key=nearest.count)
             preds.append(major)
         return np.array(preds)
+    
+    def predict_proba(self, x_test: np.ndarray) -> np.array:
+        preds_proba = np.zeros((len(x_test), self.num_classes))
+        for x_idx, test_data in enumerate(x_test):
+            nearest = self.get_neighbours(test_data)
+            for class_idx, class_label in enumerate(self.classes):
+                preds_proba[x_idx, class_idx] = np.sum(np.equal(nearest, class_label)) /self.k_neighbours
+        return preds_proba
 
 def visualize_knn_best_k(    
         x_train: np.ndarray, 

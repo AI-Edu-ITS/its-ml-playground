@@ -8,7 +8,7 @@ from tools.classification_metrics import evaluation_report
 from decision_tree import DecisionTreeClassifier
 from knn import kNN, visualize_knn_best_k
 from naive_bayes import GaussianNaiveBayes
-from regression import SimpleLinearRegression, MultiLinearRegression, visualize_simple_regression
+from regression import SimpleLinearRegression, MultiLinearRegression, visualize_simple_regression, visualize_multi_regression
 from tools.utils import load_csv_data, train_test_split
 
 if __name__ == '__main__':
@@ -60,6 +60,8 @@ if __name__ == '__main__':
             knn_preds = kNN(args.k_neighbours, args.dist_metric)
             knn_preds.fit(x_train, y_train)
             result = knn_preds.predict(x_test)
+            result_proba = knn_preds.predict_proba(x_test)
+            print(result_proba)
         elif args.algo == 'naive': # for Naïve Bayes algorithm
             naive_preds = GaussianNaiveBayes()
             naive_preds.fit(x_train, y_train)
@@ -73,5 +75,7 @@ if __name__ == '__main__':
     elif args.mode == 'vis':
         if args.algo == 'simple_regression':
             visualize_simple_regression(x_train, y_train, x_test, y_test)
+        elif args.algo == 'multi_regression':
+            visualize_multi_regression(x_train, y_train, x_test, y_test)
         elif args.algo == 'knn':
             visualize_knn_best_k(x_train, y_train, x_test, y_test, args.dist_metric, args.p_value)
