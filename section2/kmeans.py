@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import numpy as np
 
 class KMeans():
@@ -37,3 +38,12 @@ class KMeans():
     def predict(self, x_test: np.ndarray) -> np.ndarray:
         dist = np.linalg.norm(x_test[:,np.newaxis] - self.centroids, axis=2)
         return np.argmin(dist, axis=1)
+
+def visualize_preds_kmeans(x_test: np.ndarray, labels: np.ndarray, centroids: np.ndarray):
+    classes = np.unique(labels)
+    for idx in classes:
+        plt.scatter(x_test[labels == idx, 0], x_test[labels == idx, 1], s=80, label=f'Cluster {idx}')
+    plt.scatter(centroids[:,0], centroids[:,1], s=100, c='k')
+    plt.title('Visualize Cluster from K-Means')
+    plt.legend()
+    plt.show()

@@ -6,7 +6,7 @@ import sys
 sys.path.insert(0, os.getcwd())
 
 from agglomerative import AgglomerativeClustering
-from kmeans import KMeans
+from kmeans import KMeans, visualize_preds_kmeans
 from tools.utils import load_csv_data, train_test_split
 from tools.clustering_metrics import evaluation_report
 
@@ -43,3 +43,9 @@ if __name__ == '__main__':
             agglo_pred = AgglomerativeClustering(args.n_cluster)
             result = agglo_pred.fit_predict(x_data)
             evaluation_report(x_data, result, args.dist_metric)
+    elif args.mode == 'vis':
+        if args.algo == 'kmeans':
+            kmeans_pred = KMeans(args.n_cluster, args.iter, args.dist_metric)
+            centroid, inertia = kmeans_pred.fit(x_data)
+            result = kmeans_pred.predict(x_test)
+            visualize_preds_kmeans(x_test, result, centroid)
