@@ -1,15 +1,7 @@
-import math
-import matplotlib.pyplot as plt
 import numpy as np
-import os
 import pandas as pd
 
 from collections import Counter
-
-# # normalize dataset
-# def dataset_normalization(dataset: np.ndarray):
-#     for i in range(0, dataset.shape[1]-1):
-#         dataset[:,i] = ((dataset[:,i] - np.mean(dataset[:,i]))/np.std(dataset[:,i]))
 
 def calc_distance(vec1: list, vec2: list, type: str = 'euclid', p: int = 3) -> float:
     '''

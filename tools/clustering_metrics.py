@@ -115,3 +115,4 @@ def evaluation_report(x_data: np.ndarray, y_data: np.ndarray, dist_metric: str =
     print(f'Silhouette Score = {calc_silhouette_score(x_data, y_data, dist_metric)}')
     print(f'Calinski-Harabasz Index = {calc_calinski_index(x_data, y_data)}')
     print(f'Davies-Bouldin Index = {calc_davies_index(x_data, y_data, dist_metric)}')
+    # print(f'ARI Index = {calc_ari_index(x_data, y_data)}')

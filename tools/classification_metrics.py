@@ -106,7 +106,7 @@ def calc_f1score(preds: np.ndarray, y_test: np.ndarray):
 
         Output: f1-score result
     '''
-    _, false_positive, false_negative, true_positive = calc_confusion_matrix(preds, y_test).ravel()
+    _, false_positive, false_negative, true_positive = np.ravel(calc_confusion_matrix(preds, y_test))
     # special case of f1 score
     if true_positive == 0 and false_negative == 0 and false_positive == 0:
         precision_score = 1
@@ -120,7 +120,7 @@ def calc_f1score(preds: np.ndarray, y_test: np.ndarray):
         precision_score = calc_precision(false_positive, true_positive)
         recall_score = calc_recall(false_negative, true_positive)
         f1_score = (2 * precision_score * recall_score) / (precision_score + recall_score)
-    return precision_score, recall_score, round(f1_score, 3)
+    return round(precision_score, 3), round(recall_score, 3), round(f1_score, 3)
 
 def calc_confusion_matrix(preds: np.ndarray, y_test: np.ndarray) -> np.ndarray:
     '''
@@ -130,11 +130,11 @@ def calc_confusion_matrix(preds: np.ndarray, y_test: np.ndarray) -> np.ndarray:
 
         Output: confusion matrix in array shape
     '''
-    true_negative = ((y_test == 0) & (preds == 0)).sum()
-    true_positive = ((y_test == 1) & (preds == 1)).sum()
-    false_negative = ((y_test == 1) & (preds == 0)).sum()
-    false_positive = ((y_test == 0) & (preds == 1)).sum()
-    return np.array([[true_negative, false_positive], [false_negative, true_positive]])
+    true_negative = np.sum(np.bitwise_and(np.equal(y_test, 0), np.equal(preds, 0)))
+    true_positive = np.sum(np.bitwise_and(np.equal(y_test, 1), np.equal(preds, 1)))
+    false_negative = np.sum(np.bitwise_and(np.equal(y_test, 1), np.equal(preds, 0)))
+    false_positive = np.sum(np.bitwise_and(np.equal(y_test, 0), np.equal(preds, 1)))
+    return np.array([[true_positive, false_negative], [false_positive, true_negative]])
 
 def calc_auc_score(preds: np.ndarray, y_test: np.ndarray):
     '''
