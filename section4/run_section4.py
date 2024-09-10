@@ -19,7 +19,7 @@ if __name__ == '__main__':
     parser.add_argument('-m', '--mode', help='Choose mode for running (predict, vis, compare)', required=True, type=str)
     parser.add_argument('-d', '--dataset', help='Define Dataset Path', required=True, type=str)
     parser.add_argument('-a', '--algo', help='Run specific algo (logistic, multi_logistic, svm, ann)', type=str)
-    parser.add_argument('-ts', '--train_split', help='Define training percentage over testing percentage', default=0.7, type=float)
+    parser.add_argument('-ts', '--train_split', help='Define training percentage over testing percentage', default=0.8, type=float)
     parser.add_argument('-v', '--verbose', help='Define is log printed in console or not', default=False, type=bool)
     parser.add_argument('-it', '--iter', help='Define number of iteration or epoch', default=36, type=int)
     parser.add_argument('-bs', '--batch_size', help='Define batch size for process', default=32, type=int)
@@ -59,14 +59,12 @@ if __name__ == '__main__':
             multi_logits_preds = MultiLogisticRegression(args.learning_rate, args.iter, args.batch_size, args.random_seed, args.verbose)
             multi_logits_preds.fit(x_train, y_train)
             result = multi_logits_preds.predict(x_test)
-            print(multi_logits_preds.loss_list)
         elif args.algo == 'ann':
             input_size = x_train.shape[1]
             output_size = len(np.unique(y_train))
             ann_preds = MLPClassifier(input_size, args.hidden_size, output_size, args.learning_rate, args.iter, -1, -1, args.activation)
             ann_preds.fit(x_train, y_train)
             result = ann_preds.predict(x_test)
-            print(result)
         # WARNING: SVM IN HERE IS BINARY CLASSIFICATION WHICH ONLY CAN PREDICT 2 CLASS!!!
         elif args.algo == 'svm':
             svm_preds = SVM(args.iter, args.learning_rate, args.random_seed, args.regularization)
@@ -90,5 +88,4 @@ if __name__ == '__main__':
             output_size = len(np.unique(y_train))
             ann_preds = MLPClassifier(input_size, args.hidden_size, output_size, args.learning_rate, args.iter, -1, -1, args.activation)
             ann_preds.fit(x_train, y_train)
-            # result = ann_preds.predict(x_test)
             visualize_loss(ann_preds.epoch_list, ann_preds.error_list)

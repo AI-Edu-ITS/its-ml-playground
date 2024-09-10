@@ -28,10 +28,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # define dataset first (We use Shop Customer Dataset for Clustering Learning)
-    # x_columns = ['Annual Income ($)','Spending Score (1-100)','Work Experience','Family Size']
-    # y_columns = 'Gender'
-    x_columns = ['Family','Health (Life Expectancy)','Economy (GDP per Capita)','Freedom','Trust (Government Corruption)','Generosity']
-    y_columns = 'Region'
+    x_columns = ['Annual Income ($)','Spending Score (1-100)','Work Experience','Family Size']
+    y_columns = 'Gender'
     x_data, y_data = load_csv_data(args.dataset, x_columns, y_columns)
     x_train, y_train, x_test, y_test = train_test_split(x_data, y_data, args.train_split)
 

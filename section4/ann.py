@@ -8,7 +8,6 @@ import random
 sys.path.insert(0, os.getcwd())
 
 from tools.activations import choose_activation
-from tools.classification_metrics import calc_accuracy
 
 class MLPClassifier: 
     '''
@@ -69,7 +68,7 @@ class MLPClassifier:
                 self.hidden_bias[j] -= (self.lr * delta_hidden[j])
     
     # Define predict function for prediction test data
-    def predict(self, x_test: np.ndarray):
+    def predict(self, x_test: np.ndarray) -> np.ndarray:
         my_predictions = []
         
         # Just doing Forward Propagation
@@ -79,7 +78,7 @@ class MLPClassifier:
         for i in forward:
             my_predictions.append(max(enumerate(i), key=lambda x:x[1])[0])
                 
-        return my_predictions
+        return np.array(my_predictions)
     
     # turn labels into 0 1 array formats and out as same as index get
     def one_hot_encode_label(self, y_data: np.ndarray) -> dict:
