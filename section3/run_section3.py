@@ -5,7 +5,7 @@ import os
 sys.path.insert(0, os.getcwd())
 
 from tools.classification_metrics import evaluation_report
-from decision_tree import DecisionTreeClassifier
+from decision_tree import DecisionTreeClassifier, visualize_gini_vs_entropy_tree
 from knn import kNN, visualize_knn_best_k
 from naive_bayes import GaussianNaiveBayes
 from regression import SimpleLinearRegression, MultiLinearRegression, visualize_simple_regression, visualize_multi_regression
@@ -26,7 +26,7 @@ if __name__ == '__main__':
     parser.add_argument('-k', '--k_neighbours', help='Define number of k-neighbors for KNN algorithm', default=5, type=int)
 
     # decision tree specific
-    parser.add_argument('-cr', '--criterion', help='Define criterion for decision tree (entropy, gini, log_loss)', default='gini', type=str)
+    parser.add_argument('-cr', '--criterion', help='Define criterion for decision tree (entropy, gini)', default='gini', type=str)
     parser.add_argument('-md', '--max_depth', help='Define maximum depth for node tree in decision tree', default=5, type=int)
 
     # misc
@@ -79,3 +79,5 @@ if __name__ == '__main__':
             visualize_multi_regression(x_train, y_train, x_test, y_test)
         elif args.algo == 'knn':
             visualize_knn_best_k(x_train, y_train, x_test, y_test, args.dist_metric, args.p_value)
+        elif args.algo == 'tree':
+            visualize_gini_vs_entropy_tree(x_train, y_train, x_test, y_test, args.max_depth)

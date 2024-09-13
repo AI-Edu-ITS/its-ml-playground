@@ -1,4 +1,12 @@
 import numpy as np
+import matplotlib.pyplot as plt
+import os
+import sys
+
+# Enable import from other directory
+sys.path.insert(0, os.getcwd())
+
+from tools.classification_metrics import calc_accuracy
 
 class DecisionTreeClassifier():
     '''
@@ -75,7 +83,7 @@ class DecisionTreeClassifier():
         right_data = np.array([row for row in dataset if row[feat_idx] > threshold])
         return left_data, right_data
 
-    # for choose criterion in decision tree, you can choose between entropy, gini, or log_loss. we will get shannon information gain
+    # for choose criterion in decision tree, you can choose between entropy or gini. We will get shannon information gain
     def choose_criterion(self, parent_data, left_data, right_data, criterion_type: str = 'gini'):
         size_left = len(left_data) / len(parent_data)
         size_right = len(right_data) / len(parent_data)
@@ -141,3 +149,27 @@ class Node():
         self.right_node = right_node
         self.gain = gain
         self.value_leaf_node = value_leaf_node
+
+def visualize_gini_vs_entropy_tree(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarray, y_test: np.ndarray, max_depth: int):
+    acc_gini_list = []
+    acc_entropy_list = []
+    idx_rec_list = []
+    for idx in range(1, max_depth + 1):
+        # calc gini first
+        gini_preds = DecisionTreeClassifier('gini', idx)
+        gini_preds.fit(x_train, y_train)
+        result_gini = gini_preds.predict(x_test)
+        acc_gini_list.append(calc_accuracy(result_gini, y_test))
+        # calc entropy then
+        entropy_preds = DecisionTreeClassifier('entropy', idx)
+        entropy_preds.fit(x_train, y_train)
+        result_entropy = entropy_preds.predict(x_test)
+        acc_entropy_list.append(calc_accuracy(result_entropy, y_test))
+        idx_rec_list.append(idx)
+    plt.plot(idx_rec_list, acc_gini_list, label='Gini')
+    plt.plot(idx_rec_list, acc_entropy_list, label='Entropy')
+    plt.xlabel('Number of Maximum Tree Depth')
+    plt.ylabel('Accuracy Score')
+    plt.title('Accuracy vs Max Depth in Different Criterion')
+    plt.legend()
+    plt.show()
