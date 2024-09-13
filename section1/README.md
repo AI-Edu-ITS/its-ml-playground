@@ -50,8 +50,29 @@ python3 section1/run_section1.py --mode sort --dataset ./dataset/whr_dataset.csv
 
 There are 2 datasets used in this repository namely **World Happiness Report Dataset (for classification)** and **Shop Customer Data (for clustering)**:
 
-- This repository uses World Happiness Report Dataset from [Kaggle Website Classification](https://www.kaggle.com/datasets/unsdsn/world-happiness?resource=download&select=2016.csv). This dataset contains 13 columns to described the world happiness report based on several parameters for 157 rows.
-- This repository also uses Shop Customer Dataset from [Kaggle Website Clustering](https://www.kaggle.com/datasets/datascientistanna/customers-dataset). This dataset contains 8 columns to describe customer data who visits the shop with 2000 rows in total.
+- This repository uses World Happiness Report Dataset from [Kaggle Website Classification](https://www.kaggle.com/datasets/unsdsn/world-happiness?resource=download&select=2016.csv). This dataset contains 13 columns to described the world happiness report based on several parameters for 157 rows. This columns are represented as belows:
+  - Country
+  - Region
+  - Happiness Rank
+  - Happiness Score
+  - Lower Confidence Interval
+  - Upper Confidence Interval
+  - Economy (GDP per Capita)
+  - Family
+  - Health (Life Expectancy)
+  - Freedom
+  - Trust (Government Corruption)
+  - Generosity
+  - Dystopia Residual
+- This repository also uses Shop Customer Dataset from [Kaggle Website Clustering](https://www.kaggle.com/datasets/datascientistanna/customers-dataset). This dataset contains 8 columns to describe customer data who visits the shop with 2000 rows in total. This columns are represented as belows:
+  - CustomerID
+  - Gender
+  - Age
+  - Annual Income ($)
+  - Spending Score (1-100)
+  - Profession
+  - Work Experience
+  - Family Size
 
 ## 📚 Libraries Used in This Repository
 
