@@ -47,3 +47,16 @@ def visualize_preds_kmeans(x_test: np.ndarray, labels: np.ndarray, centroids: np
     plt.title('Visualize Cluster from K-Means')
     plt.legend()
     plt.show()
+
+def visualize_elbow_kmeans(x_data: np.ndarray):
+    elbow_list = []
+    for idx in range(1,20):
+        preds = KMeans(n_clusters=idx)
+        preds.fit(x_data)
+        elbow_list.append(preds.inertia)
+    plt.plot(range(1,20), elbow_list, label='Elbow Curve')
+    plt.legend()
+    plt.xlabel('Number of Cluster')
+    plt.ylabel('Elbow Result')
+    plt.title('Elbow Curve Plot')
+    plt.show()

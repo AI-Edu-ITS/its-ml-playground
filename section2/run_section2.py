@@ -6,7 +6,7 @@ import sys
 sys.path.insert(0, os.getcwd())
 
 from agglomerative import AgglomerativeClustering
-from kmeans import KMeans, visualize_preds_kmeans
+from kmeans import KMeans, visualize_preds_kmeans, visualize_elbow_kmeans
 from tools.utils import load_csv_data, train_test_split
 from tools.clustering_metrics import evaluation_report
 
@@ -49,3 +49,4 @@ if __name__ == '__main__':
             centroid, inertia = kmeans_pred.fit(x_data)
             result = kmeans_pred.predict(x_test)
             visualize_preds_kmeans(x_test, result, centroid)
+            visualize_elbow_kmeans(x_data)
