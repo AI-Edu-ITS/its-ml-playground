@@ -39,10 +39,10 @@ class MLPClassifier:
         self.epoch_list = []
 
         # init weight
-        self.hidden_weights = [[2  * random.random() - 1 for i in range(self.hidden_layer)] for j in range(self.input_layer)]
-        self.output_weights = [[2  * random.random() - 1 for i in range(self.output_layer)] for j in range(self.hidden_layer)]
-        self.hidden_bias = np.array([self.bias_hidden for i in range(self.hidden_layer)])
-        self.output_bias = np.array([self.bias_output for i in range(self.output_layer)])
+        self.hidden_weights = [[2  * random.random() - 1 for _ in range(self.hidden_layer)] for _ in range(self.input_layer)]
+        self.output_weights = [[2  * random.random() - 1 for _ in range(self.output_layer)] for _ in range(self.hidden_layer)]
+        self.hidden_bias = np.array([self.bias_hidden for _ in range(self.hidden_layer)])
+        self.output_bias = np.array([self.bias_output for _ in range(self.output_layer)])
     
     # Define Backpropagation process algoritm
     def backpropagation(self, x_data: np.ndarray):
@@ -92,13 +92,16 @@ class MLPClassifier:
     # training process with train data
     def fit(self, x_train: np.ndarray, y_train: np.ndarray):
         # class count
-        total_error = 0
+        prev_total_error = 0
+        cur_total_error = 0
+        counter_stop = 0
         hidden_weight_loss = []
         output_weight_loss = []
         # one hot label
         self.output = np.zeros(len(np.unique(y_train)))
         self.one_hot_labels = self.one_hot_encode_label(y_train)
         for epoch in range(1, self.epochs + 1):
+            prev_total_error = cur_total_error
             for idx, inputs in enumerate(x_train):
                 # Forward Pass
                 temp_l1 = np.dot(inputs, self.hidden_weights) + self.hidden_bias.T
@@ -113,15 +116,19 @@ class MLPClassifier:
                 for i in range(self.output_layer):
                     erro = (self.output[i] - self.output_l2[i]) ** 2
                     square_error += (0.05 * erro)
-                    total_error += square_error
+                    cur_total_error += square_error
                 # Backpropagation : Update Weights
                 self.backpropagation(inputs)
                 
-            total_error = (total_error / len(x_train))
+            cur_total_error = (cur_total_error / len(x_train))
+            if cur_total_error == prev_total_error:
+                counter_stop += 1
+                if counter_stop == 3:
+                    break
             
             # Print error value for each epoch
-            print("Epoch ", epoch, "- Total Error: ",total_error)
-            self.error_list.append(total_error)
+            print("Epoch ", epoch, "- Total Error: ",cur_total_error)
+            self.error_list.append(cur_total_error)
             self.epoch_list.append(epoch)
                 
             hidden_weight_loss.append(self.hidden_weights)
@@ -140,7 +147,6 @@ class MLPClassifier:
         print(output_weight_loss[0])
 
 def visualize_loss(epoch_list: list, error_list: list):
-    plt.figure(figsize=(9,4))
     plt.plot(epoch_list, error_list, color='blue')
     plt.xlabel('Epochs')
     plt.ylabel('Loss Value')
