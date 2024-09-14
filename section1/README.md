@@ -1,4 +1,4 @@
-# ✨ Welcome to Section 1 Tutorial ✨
+# ✨ Welcome to Section 1: Introduction Tutorial ✨
 
 ## 📫 Download Your Dataset
 
@@ -8,7 +8,7 @@ Please run following command from your terminal/command prompt in curent reposit
 python3 section1/run_section1.py --mode download
 ```
 
-If dataset successfully downloaded, your dataset will be appear in dataset folder with file name `whr_dataset.csv`
+If dataset successfully downloaded, your dataset will be appear in dataset folder with file name `whr_dataset.csv`, `shop_customer_dataset.csv`, and `abalone_dataset.csv`.
 
 ## 📈 Dataset Exploration
 
@@ -45,6 +45,10 @@ python3 section1/run_section1.py --mode sort --dataset ./dataset/whr_dataset.csv
 **💡 Tips: you can change which column you want to sort. Make sure that column exist in dataset!!**
 
 </details>
+
+## ❗ Important: Test Your Understanding For Section 1: Introduction
+
+You can test your understanding about Section 1: Introduction by answer all questions in `practice_section1.ipynb`. Follow all guides from each cell. You can also compare your result by expanding solution below your code.
 
 ## 📁 Dataset Explanation
 
@@ -90,3 +94,4 @@ There are 2 datasets used in this repository namely **World Happiness Report Dat
 - Pandas: library for data manipulation, reading data, and data analysis.
 - Matplotlib: library for data plotting and data visualization.
 - Seaborn: based on Matplotlib with more advanced features to visualize your data.
+- Scikit-Learn: library for machine learning implementation, we use this library to show the difference between create machine learning from scratch approach and create machine learning using library approach.
