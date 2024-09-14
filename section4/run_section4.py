@@ -12,8 +12,6 @@ from svm import SVM
 from tools.classification_metrics import evaluation_report, calc_accuracy
 from tools.utils import load_csv_data, train_test_split
 
-from sklearn.svm import SVC
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('Section 4 Argument Parser')
     parser.add_argument('-m', '--mode', help='Choose mode for running (predict, vis, compare)', required=True, type=str)
@@ -40,12 +38,12 @@ if __name__ == '__main__':
 
     #define dataset
     # You can always change which columns you want to run (choose at least 2 columns with 1 column as y value)
-    if args.algo == 'svm':
+    if args.algo == 'svm' or args.algo == 'logistic' or args.algo == 'ann':
         x_columns = ['Annual Income ($)','Spending Score (1-100)','Work Experience','Family Size']
         y_columns = 'Gender'
     else:
-        x_columns = ['Family','Health (Life Expectancy)','Economy (GDP per Capita)','Freedom','Trust (Government Corruption)','Generosity', 'Dystopia Residual']
-        y_columns = 'Region'
+        x_columns = ['Length','Diameter','Height','Whole Weight','Shucked Weight','Viscera Weight','Shell Weight','Rings']
+        y_columns = 'Gender'
     x_data, y_data = load_csv_data(args.dataset, x_columns, y_columns)
     x_train, y_train, x_test, y_test = train_test_split(x_data, y_data, args.train_split)
 
@@ -65,6 +63,7 @@ if __name__ == '__main__':
             ann_preds = MLPClassifier(input_size, args.hidden_size, output_size, args.learning_rate, args.iter, -1, -1, args.activation)
             ann_preds.fit(x_train, y_train)
             result = ann_preds.predict(x_test)
+            print(result)
         # WARNING: SVM IN HERE IS BINARY CLASSIFICATION WHICH ONLY CAN PREDICT 2 CLASS!!!
         elif args.algo == 'svm':
             svm_preds = SVM(args.iter, args.learning_rate, args.random_seed, args.regularization)

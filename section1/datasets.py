@@ -5,6 +5,7 @@ import pandas as pd
 # Datasets URL
 WHR_DATASETS_URL = 'https://drive.google.com/uc?id=1NLS0sEBWYjY-tHmnndUYqtefz9R3Clrv' # for classification
 SHOP_DATASETS_URL = 'https://drive.google.com/uc?id=1ypjmMFDTmIoYr3x9WT9Pkw0Aa2b370Fc' # for clustering
+ABALONE_DATASETS_URL = 'https://drive.google.com/uc?id=1tUt39F2o-rkIplUTCS0jO2kSmfLx_7ni' # for Ann using MLP
 
 # download whr_datasets
 def download_datasets():
@@ -12,9 +13,11 @@ def download_datasets():
     dataset_path = os.getcwd() + '/dataset'
     whr_file_path = os.path.join(dataset_path, 'temp_dataset_whr.csv')
     shop_data_path = os.path.join(dataset_path, 'shop_customer_dataset.csv')
+    abalone_path = os.path.join(dataset_path, 'abalone_dataset.csv')
     # download and save dataset
     gdown.download(url=WHR_DATASETS_URL, output=whr_file_path, quiet=False)
     gdown.download(url=SHOP_DATASETS_URL, output=shop_data_path, quiet=False)
+    gdown.download(url=ABALONE_DATASETS_URL, output=abalone_path, quiet=False)
 
 def load_dataset(dataset_path: str):
     # read csv dataset

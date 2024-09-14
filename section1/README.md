@@ -50,7 +50,7 @@ python3 section1/run_section1.py --mode sort --dataset ./dataset/whr_dataset.csv
 
 There are 2 datasets used in this repository namely **World Happiness Report Dataset (for classification)** and **Shop Customer Data (for clustering)**:
 
-- This repository uses World Happiness Report Dataset from [Kaggle Website Classification](https://www.kaggle.com/datasets/unsdsn/world-happiness?resource=download&select=2016.csv). This dataset contains 13 columns to described the world happiness report based on several parameters for 157 rows. This columns are represented as belows:
+- This repository uses World Happiness Report Dataset from [Kaggle Website Classification](https://www.kaggle.com/datasets/unsdsn/world-happiness?resource=download&select=2016.csv). This dataset contains 13 columns to described the world happiness report based on several parameters for 157 rows. All columns are represented as below:
   - Country
   - Region
   - Happiness Rank
@@ -64,7 +64,7 @@ There are 2 datasets used in this repository namely **World Happiness Report Dat
   - Trust (Government Corruption)
   - Generosity
   - Dystopia Residual
-- This repository also uses Shop Customer Dataset from [Kaggle Website Clustering](https://www.kaggle.com/datasets/datascientistanna/customers-dataset). This dataset contains 8 columns to describe customer data who visits the shop with 2000 rows in total. This columns are represented as belows:
+- This repository also uses Shop Customer Dataset from [Kaggle Website Clustering](https://www.kaggle.com/datasets/datascientistanna/customers-dataset). This dataset contains 8 columns to describe customer data who visits the shop with 2000 rows in total. All columns are represented as below:
   - CustomerID
   - Gender
   - Age
@@ -73,6 +73,16 @@ There are 2 datasets used in this repository namely **World Happiness Report Dat
   - Profession
   - Work Experience
   - Family Size
+- This Repository also uses Abalone Dataset from [Abalone Dataset](https://archive.ics.uci.edu/dataset/1/abalone). This dataset contains 8 columns to describe abalone physical measurement with 4177 rows in total. All columns are represented as below:
+  - Gender
+  - Length
+  - Diameter
+  - Height
+  - Whole Weight
+  - Shucked Weight
+  - Viscera Weight
+  - Shell Weight
+  - Rings
 
 ## 📚 Libraries Used in This Repository
 
