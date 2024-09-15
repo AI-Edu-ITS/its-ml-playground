@@ -8,8 +8,8 @@ sys.path.insert(0, os.getcwd())
 
 from ann import MLPClassifier, visualize_loss
 from logistic_regression import LogisticRegression, MultiLogisticRegression, visualize_logits_loss
-from svm import SVM
-from tools.classification_metrics import evaluation_report, calc_accuracy
+from svm import SVMNoKernel, visualize_svm_result
+from tools.classification_metrics import evaluation_report
 from tools.utils import load_csv_data, train_test_split
 
 if __name__ == '__main__':
@@ -19,7 +19,7 @@ if __name__ == '__main__':
     parser.add_argument('-a', '--algo', help='Run specific algo (logistic, multi_logistic, svm, ann)', type=str)
     parser.add_argument('-ts', '--train_split', help='Define training percentage over testing percentage', default=0.8, type=float)
     parser.add_argument('-v', '--verbose', help='Define is log printed in console or not', default=False, type=bool)
-    parser.add_argument('-it', '--iter', help='Define number of iteration or epoch', default=36, type=int)
+    parser.add_argument('-it', '--iter', help='Define number of iteration or epoch', default=100, type=int)
     parser.add_argument('-bs', '--batch_size', help='Define batch size for process', default=32, type=int)
     parser.add_argument('-rs', '--random_seed', help='Define random seed for initialization', default=42, type=int)
 
@@ -64,11 +64,16 @@ if __name__ == '__main__':
             ann_preds.fit(x_train, y_train)
             result = ann_preds.predict(x_test)
             print(result)
-        # WARNING: SVM IN HERE IS BINARY CLASSIFICATION WHICH ONLY CAN PREDICT 2 CLASS!!!
         elif args.algo == 'svm':
-            svm_preds = SVM(args.iter, args.learning_rate, args.random_seed, args.regularization)
+            svm_preds = SVMNoKernel(args.iter, args.learning_rate, args.regularization)
             svm_preds.fit(x_train, y_train)
             result = svm_preds.predict(x_test)
+            # sklearn
+            from sklearn.svm import SVC
+            skmodel = SVC()
+            skmodel.fit(x_train, y_train)
+            sk_predictions = skmodel.predict(x_test)
+            evaluation_report(args.algo, sk_predictions, y_test)
         evaluation_report(args.algo, result, y_test)
     elif args.mode =='vis':
         if args.algo == 'logistic' or args.algo == 'multi_logistic':
@@ -76,12 +81,11 @@ if __name__ == '__main__':
             multi_logits_preds.fit(x_train, y_train)
             visualize_logits_loss(multi_logits_preds.loss_list)
         elif args.algo == 'svm':
-            svm_preds = SVM(args.iter, args.learning_rate, args.random_seed, args.regularization)
-            svm_preds.fit(x_train, y_train)
-            result = svm_preds.predict(x_test)
-            acc_score = calc_accuracy(result, y_test)
+            svm_preds = SVMNoKernel(args.iter, args.learning_rate, args.regularization)
+            svm_preds.fit(x_data, y_data)
             weight = svm_preds.weight
             bias = svm_preds.bias
+            visualize_svm_result(x_data, y_data, weight, bias)
         elif args.algo == 'ann':
             input_size = x_train.shape[1]
             output_size = len(np.unique(y_train))
