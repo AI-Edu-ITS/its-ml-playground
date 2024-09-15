@@ -106,7 +106,7 @@ def calc_f1score(preds: np.ndarray, y_test: np.ndarray):
 
         Output: f1-score result
     '''
-    _, false_positive, false_negative, true_positive = np.ravel(calc_confusion_matrix(preds, y_test))
+    true_positive, _, false_positive, false_negative = np.ravel(calc_confusion_matrix(preds, y_test))
     # special case of f1 score
     if true_positive == 0 and false_negative == 0 and false_positive == 0:
         precision_score = 1
@@ -134,34 +134,7 @@ def calc_confusion_matrix(preds: np.ndarray, y_test: np.ndarray) -> np.ndarray:
     true_positive = np.sum(np.bitwise_and(np.equal(y_test, 1), np.equal(preds, 1)))
     false_negative = np.sum(np.bitwise_and(np.equal(y_test, 1), np.equal(preds, 0)))
     false_positive = np.sum(np.bitwise_and(np.equal(y_test, 0), np.equal(preds, 1)))
-    return np.array([[true_positive, false_negative], [false_positive, true_negative]])
-
-def calc_auc_score(preds: np.ndarray, y_test: np.ndarray):
-    '''
-        Function for calculate Area Under the Curve (AUC) Score. AUC represents the overall performance 
-        of a classifier by measuring the area under the Receiver Operating Characteristic (ROC) curve.
-        To compute the AUC score, the ROC curve is created by calculating the TPR and FPR values at different 
-        classification thresholds.
-    '''
-    # init true positive rate (TPR) and false positive rate (FPR) list
-    tpr_list = []
-    fpr_list = []
-    # sort data first
-    sort_y_preds_indices = np.argsort(-preds)
-    sort_y_test = y_test[sort_y_preds_indices]
-    # total number positive & negative
-    num_positive = np.sum(np.equal(sort_y_test, 1))
-    num_negative = np.sum(np.equal(sort_y_test, 0))
-    cum_tp = np.cumsum(np.equal(sort_y_test, 1))
-    cum_fp = np.cumsum(np.not_equal(sort_y_test, 1))
-    
-    tpr = cum_tp / num_positive
-    fpr = cum_fp / num_negative
-
-    tpr_list.append(tpr)
-    fpr_list.append(fpr)
-        
-    return np.trapz(tpr_list, fpr_list)
+    return np.array([[true_positive, true_negative], [false_positive, false_negative]])
 
 def evaluation_report(algo: str, preds: np.ndarray, y_test: np.ndarray) -> float:
     '''
@@ -175,7 +148,6 @@ def evaluation_report(algo: str, preds: np.ndarray, y_test: np.ndarray) -> float
         print(f'Evaluation Report For {algo} Algorithm')
         print(f'Accuracy = {calc_accuracy(preds, y_test)} %')
         print(f'Error Rate = {calc_error_rate(preds, y_test)} %')
-        print(f'AUC Score = {calc_auc_score(preds, y_test)}')
         precision, recall, f1score = calc_f1score(preds, y_test)
         print(f'Precision = {precision}')
         print(f'Recall = {recall}')
@@ -190,6 +162,3 @@ def evaluation_report(algo: str, preds: np.ndarray, y_test: np.ndarray) -> float
         print(f'SSR = {calc_ssr(preds, y_test)}')
         print(f'SST = {calc_sst(preds, y_test)}')
         print(f'R2 Square = {calc_r2_square(preds, y_test)}')
-
-def compare_evaluation():
-    return 0
