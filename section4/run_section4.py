@@ -31,8 +31,9 @@ if __name__ == '__main__':
     parser.add_argument('-rg', '--regularization', help='Define regularization', default=0.01, type=float)
 
     # ann args
-    parser.add_argument('-hs', '--hidden_size', help='Define hidden size of the network', default=4, type=int)
+    parser.add_argument('-hl', '--hidden_layer', help='Define hidden layer of the network', default=4, type=int)
     parser.add_argument('-ac', '--activation', help='Define activation in mlp (sigmoid, relu, tanh)', default='relu', type=str)
+    parser.add_argument('-vs', '--verbose', help='Define is ANN produce output or not for loss and weight', default=False, type=bool)
 
     args = parser.parse_args()
 
@@ -60,7 +61,7 @@ if __name__ == '__main__':
         elif args.algo == 'ann':
             input_size = x_train.shape[1]
             output_size = len(np.unique(y_train))
-            ann_preds = MLPClassifier(input_size, args.hidden_size, output_size, args.learning_rate, args.iter, -1, -1, args.activation)
+            ann_preds = MLPClassifier(input_size, args.hidden_size, output_size, args.learning_rate, args.iter, -1, -1, args.activation, args.verbose)
             ann_preds.fit(x_train, y_train)
             result = ann_preds.predict(x_test)
             print(result)

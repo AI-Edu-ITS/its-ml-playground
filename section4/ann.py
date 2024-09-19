@@ -13,8 +13,7 @@ class MLPClassifier:
     '''
         Implementation of Multi-Layer Perceptron for multi class clasiification. You can choose the activations section
         (whether using Sigmoid, ReLu, or Tanh). Important notes:
-        Input layer must match number of x data features (check it by using x_data.shape[1] or simply pass it). Output
-        layer must match number of class available in y data (simply check it by len(np.unique(y_data)) or simply pass it)
+        Input layer must match number of x data features. Output layer must match number of class available in y data
     '''
     def __init__(
             self, 
@@ -25,7 +24,8 @@ class MLPClassifier:
             epochs: int = 300,
             bias_hidden_layer: int = -1,
             bias_ouput_layer: int = -1,
-            activation: str = 'relu'
+            activation: str = 'relu',
+            verbose: bool = False,
         ):
         self.input_layer = input_layer
         self.hidden_layer = hidden_layer
@@ -35,6 +35,7 @@ class MLPClassifier:
         self.bias_hidden = bias_hidden_layer
         self.bias_output = bias_ouput_layer
         self.activation = activation
+        self.verbose = verbose
         self.error_list = []
         self.epoch_list = []
 
@@ -127,7 +128,8 @@ class MLPClassifier:
                     break
             
             # Print error value for each epoch
-            print("Epoch ", epoch, "- Total Error: ",cur_total_error)
+            if self.verbose == True:
+                print("Epoch ", epoch, "- Total Error: ",cur_total_error)
             self.error_list.append(cur_total_error)
             self.epoch_list.append(epoch)
                 
@@ -137,14 +139,15 @@ class MLPClassifier:
         # self.show_err_graphic(error_array,epoch_array)
         
         # Print weight Hidden layer acquire during training
-        print('')
-        print('weight value of Hidden layer acquire during training: ')
-        print(hidden_weight_loss[0])
-        
-        # Plot weight Output layer acquire during training
-        print('')
-        print('weight value of Output layer acquire during training: ')
-        print(output_weight_loss[0])
+        if self.verbose == True:
+            print('')
+            print('weight value of Hidden layer acquire during training: ')
+            print(hidden_weight_loss[0])
+            
+            # Plot weight Output layer acquire during training
+            print('')
+            print('weight value of Output layer acquire during training: ')
+            print(output_weight_loss[0])
 
 def visualize_loss(epoch_list: list, error_list: list):
     plt.plot(epoch_list, error_list, color='blue')
