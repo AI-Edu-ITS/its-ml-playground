@@ -26,7 +26,7 @@ class kNN():
         self.classes = np.unique(self.y_train)
         self.num_classes = len(self.classes)
     
-    def get_neighbours(self, test_data) -> list:
+    def get_neighbours(self, test_data: np.ndarray) -> list:
         dist = []
         neighbours = []
         for (train_data, train_class) in zip(self.x_train, self.y_train):
@@ -38,12 +38,12 @@ class kNN():
         return neighbours
 
     def predict(self, x_test: np.ndarray) -> np.array:
-        preds = []
-        for test_data in x_test:
+        preds = np.zeros(len(x_test))
+        for idx, test_data in enumerate(x_test):
             nearest = self.get_neighbours(test_data)
             major = max(set(nearest), key=nearest.count)
-            preds.append(major)
-        return np.array(preds)
+            preds[idx] = major
+        return preds
     
     def predict_proba(self, x_test: np.ndarray) -> np.array:
         preds_proba = np.zeros((len(x_test), self.num_classes))
