@@ -19,25 +19,31 @@ def choose_activation(x_data: np.ndarray, activation: str, state: str):
             result = tanh_derivative(x_data)
     return result
 
+# softmax (forward pass and its backward pass)
+def softmax(x_data: np.ndarray) -> np.ndarray:
+    e_x = np.exp(x_data - np.max(x_data))
+    return e_x / np.sum(e_x, axis=-1, keepdims=True)
+
+def softmax_derivative(x_data: np.ndarray) -> np.ndarray:
+    return softmax(x_data) * (1 - softmax(x_data))
+
 # sigmoid (forward pass and its backward pass)
 def sigmoid(x_data: np.ndarray) -> np.ndarray:
-    return 1. / (1. + np.exp(-x_data))
+    return 1. / (1. + np.exp(-x_data * 1.0))
 
 def sigmoid_derivative(x_data: np.ndarray) -> np.ndarray: # gradient calc in sigmoid
-    theta = sigmoid(x_data)
-    return theta * (1 - theta)
+    return sigmoid(x_data) * (1 - sigmoid(x_data))
 
 # relu (forward pass and its backward pass)
 def relu(x_data: np.ndarray) -> np.ndarray:
-    temp = np.zeros(x_data.shape, dtype=np.float32)
-    return np.maximum(temp, x_data)
+    return np.where(x_data >= 0, x_data, 0)
 
 def relu_derivative(x_data: np.ndarray) -> np.ndarray: # gradient calc in relu
-    return np.greater(x_data, 0.).astype(np.float32)
+    return np.where(x_data >= 0, 1, 0)
 
 # tanh (forward pass and its backward pass)
 def tanh(x_data: np.ndarray) -> np.ndarray:
-    return np.tanh(x_data)
+    return 2 / (1 + np.exp(-2 * x_data)) - 1
 
 def tanh_derivative(x_data: np.ndarray) -> np.ndarray:
-    return 1. / (np.cosh(x_data) ** 2)
+    return 1 - np.power(tanh(x_data), 2)

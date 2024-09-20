@@ -2,16 +2,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import sys
-import random
 
 # Enable import outside directory
 sys.path.insert(0, os.getcwd())
 
-from tools.activations import choose_activation
+from tools.activations import choose_activation, softmax, softmax_derivative
+from tools.loss import SquareLoss
 
 class MLPClassifier: 
     '''
-        Implementation of Multi-Layer Perceptron for multi class clasiification. You can choose the activations section
+        Implementation of Multi-Layer Perceptron for multi class clasiification using Stocastic Gradient Descent solver. You can choose the activations section
         (whether using Sigmoid, ReLu, or Tanh). Important notes:
         Input layer must match number of x data features. Output layer must match number of class available in y data
     '''
@@ -22,9 +22,7 @@ class MLPClassifier:
             output_layer: int = 5,
             learning_rate: float = 0.005,
             epochs: int = 300,
-            bias_hidden_layer: int = -1,
-            bias_ouput_layer: int = -1,
-            activation: str = 'relu',
+            activation: str = 'sigmoid',
             verbose: bool = False,
         ):
         self.input_layer = input_layer
@@ -32,18 +30,17 @@ class MLPClassifier:
         self.output_layer = output_layer
         self.lr = learning_rate
         self.epochs = epochs
-        self.bias_hidden = bias_hidden_layer
-        self.bias_output = bias_ouput_layer
         self.activation = activation
         self.verbose = verbose
         self.error_list = []
         self.epoch_list = []
+        self.loss = SquareLoss()
 
         # init weight
-        self.hidden_weights = [[2  * random.random() - 1 for _ in range(self.hidden_layer)] for _ in range(self.input_layer)]
-        self.output_weights = [[2  * random.random() - 1 for _ in range(self.output_layer)] for _ in range(self.hidden_layer)]
-        self.hidden_bias = np.array([self.bias_hidden for _ in range(self.hidden_layer)])
-        self.output_bias = np.array([self.bias_output for _ in range(self.output_layer)])
+        self.hidden_weights = np.random.randn(self.input_layer, self.hidden_layer)
+        self.output_weights = np.random.randn(self.hidden_layer, self.output_layer)
+        self.hidden_bias = np.zeros((self.hidden_layer))
+        self.output_bias = np.zeros((self.output_layer))
     
     # Define Backpropagation process algoritm
     def backpropagation(self, x_data: np.ndarray):
@@ -96,8 +93,8 @@ class MLPClassifier:
         prev_total_error = 0
         cur_total_error = 0
         counter_stop = 0
-        hidden_weight_loss = []
-        output_weight_loss = []
+        self.hidden_weight_loss = []
+        self.output_weight_loss = []
         # one hot label
         self.output = np.zeros(len(np.unique(y_train)))
         self.one_hot_labels = self.one_hot_encode_label(y_train)
@@ -113,11 +110,10 @@ class MLPClassifier:
                 # Stage 2 - One-Hot-Encoding
                 self.output = self.one_hot_labels[y_train[idx]]
                 
-                square_error = 0
                 for i in range(self.output_layer):
-                    erro = (self.output[i] - self.output_l2[i]) ** 2
-                    square_error += (0.05 * erro)
-                    cur_total_error += square_error
+                    temp_loss = self.loss.gradient(self.output[i], self.output_l2[i])
+                    # square_error += (0.05 * erro)
+                    cur_total_error += temp_loss
                 # Backpropagation : Update Weights
                 self.backpropagation(inputs)
                 
@@ -133,8 +129,8 @@ class MLPClassifier:
             self.error_list.append(cur_total_error)
             self.epoch_list.append(epoch)
                 
-            hidden_weight_loss.append(self.hidden_weights)
-            output_weight_loss.append(self.output_weights)
+            self.hidden_weight_loss.append(self.hidden_weights)
+            self.output_weight_loss.append(self.output_weights)
             
         # self.show_err_graphic(error_array,epoch_array)
         
@@ -142,12 +138,12 @@ class MLPClassifier:
         if self.verbose == True:
             print('')
             print('weight value of Hidden layer acquire during training: ')
-            print(hidden_weight_loss[0])
+            print(self.hidden_weight_loss[0])
             
             # Plot weight Output layer acquire during training
             print('')
             print('weight value of Output layer acquire during training: ')
-            print(output_weight_loss[0])
+            print(self.output_weight_loss[0])
 
 def visualize_loss(epoch_list: list, error_list: list):
     plt.plot(epoch_list, error_list, color='blue')
