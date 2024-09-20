@@ -22,7 +22,7 @@ def calc_mae(preds: np.ndarray, y_test: np.ndarray) -> float:
     mape = np.mean(np.abs((y_test - preds)))
     return round(mape, 3)
 
-def calc_r2_square(preds: np.ndarray, y_test: np.ndarray) -> float:
+def calc_r2_score(preds: np.ndarray, y_test: np.ndarray) -> float:
     '''
         Function to calculate R-Squared Error for Linear Regression. this function needs
         to calculate Sum of Squares of the Residuals (SSres) and calculate Sum of Squares Total (SStot)
@@ -31,30 +31,10 @@ def calc_r2_square(preds: np.ndarray, y_test: np.ndarray) -> float:
         
         Output: r2-square result
     '''
-    y_test_mean = y_test.mean()
-    ssres = ((y_test - preds) ** 2).sum()
-    sstot = ((y_test - y_test_mean) ** 2).sum()
-    r2_square = 1 - (ssres/sstot)
-    return round(r2_square, 3)
-
-def calc_sse(preds: np.ndarray, y_test: np.ndarray) -> float:
-    '''
-        Function to calculate Sum of Square Errors (SSE), the sum of squared differences 
-        between predicted data points and observed data points.
-    '''
-    return round(np.sum(np.square(preds - y_test)), 3)
-
-def calc_ssr(preds: np.ndarray, y_test: np.ndarray) -> float:
-    '''
-        Function to calculate Sum of Square Regression (SSR), The sum of squared differences 
-        between predicted data points and the mean of the response variable.
-    '''
-    return round(np.sum(np.square(preds - np.mean(y_test))), 3)
-
-def calc_sst(preds: np.ndarray, y_test: np.ndarray) -> float:
-    ssr = calc_ssr(preds, y_test)
-    sse = calc_sse(preds, y_test)
-    return round(sse + ssr, 3)
+    ssr = np.sum(np.square((preds - y_test)))
+    sst = np.sum(np.square((y_test - np.mean(y_test))))
+    r2_score = 1 - (ssr/sst)
+    return round(r2_score, 3)
 
 def calc_accuracy(preds: np.ndarray, y_test: np.ndarray) -> float:
     '''
@@ -158,7 +138,4 @@ def evaluation_report(algo: str, preds: np.ndarray, y_test: np.ndarray) -> float
         print(f'MSE = {calc_mse(preds, y_test)}')
         print(f'RMSE = {round(np.sqrt(calc_mse(preds, y_test)), 3)}')
         print(f'MAE = {calc_mae(preds, y_test)}')
-        print(f'SSE = {calc_sse(preds, y_test)}')
-        print(f'SSR = {calc_ssr(preds, y_test)}')
-        print(f'SST = {calc_sst(preds, y_test)}')
-        print(f'R2 Square = {calc_r2_square(preds, y_test)}')
+        print(f'R2 Square = {calc_r2_score(preds, y_test)}')
