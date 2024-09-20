@@ -72,3 +72,13 @@ def train_test_split(x_data: np.ndarray, y_data: np.ndarray, train_size: float =
     x_test = x_data[~split]
     y_test = y_data[~split]
     return x_train, y_train, x_test, y_test
+
+def one_hot_label(y_data: np.ndarray, n_col=None) -> np.ndarray:
+    '''
+        Function to turn class into one hot encode labelling
+    '''
+    if not n_col:
+        n_col = np.amax(y_data) + 1
+    one_hot = np.zeros((y_data.shape[0], n_col))
+    one_hot[np.arange(y_data.shape[0]), y_data] = 1
+    return one_hot
