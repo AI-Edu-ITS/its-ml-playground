@@ -4,20 +4,17 @@ import numpy as np
 class KMeans():
     '''
         Class for running LLoyd Algorithm or known as K-Means Clustering. we used parameters inputs such as
-        number of clusters, maximum iteration, and tolerance value for decalring model divergence. we also add distance
-        metric to choose for calculate distance between centroid and p value for minkowski distance
+        number of clusters, maximum iteration, and tolerance value for decalring model divergence.
     '''
-    def __init__(self, n_clusters: int = 8, iterations: int = 100, dist_metric: str = 'euclid', p: int = 3) -> None:
+    def __init__(self, n_clusters: int = 8, iterations: int = 100) -> None:
         self.n_clusters = n_clusters
         self.iter = iterations
-        self.dist_metric = dist_metric
-        self.p = p
     
     def fit(self, x_train: np.ndarray) -> np.ndarray:
         n_samples, _ = x_train.shape
         centroid_idx = np.random.choice(n_samples, self.n_clusters, replace=False)
         self.centroids = x_train[centroid_idx]
-        self.points = None
+        # self.points = None
         self.inertia = np.inf
 
         for _ in range(self.iter):

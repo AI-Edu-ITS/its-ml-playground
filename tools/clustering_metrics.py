@@ -92,27 +92,7 @@ def calc_silhouette_score(x_data: np.ndarray, y_data: np.ndarray, dist_metric: s
     mean_score = score['silhouette_score'].mean()
     return round(mean_score,3)
 
-# def calc_ari_index(preds: np.ndarray, y_data: np.ndarray) -> float:
-#     '''
-#         Function to calculate Adjusted Rand Index (ARI)
-#     '''
-#     # create contingency table
-#     data_size = len(y_data)
-#     ctable = create_contingency_table(preds, y_data, data_size)
-#     print(ctable)
-
-# def create_contingency_table(preds: np.ndarray, y_data: np.ndarray, data_size: int) -> np.ndarray:
-#     ctable = np.zeros(data_size ** 2, dtype=np.uint32)
-#     re_idx = data_size * preds + y_data
-#     print(data_size)
-#     print(np.bincount(re_idx))
-#     idx, count = np.bincount(re_idx)
-#     for i, c in zip(idx, count):
-#         ctable[i] = c
-#     return ctable.reshape(data_size, data_size)
-
 def evaluation_report(x_data: np.ndarray, y_data: np.ndarray, dist_metric: str = 'euclid'):
     print(f'Silhouette Score = {calc_silhouette_score(x_data, y_data, dist_metric)}')
     print(f'Calinski-Harabasz Index = {calc_calinski_index(x_data, y_data)}')
     print(f'Davies-Bouldin Index = {calc_davies_index(x_data, y_data, dist_metric)}')
-    # print(f'ARI Index = {calc_ari_index(x_data, y_data)}')
