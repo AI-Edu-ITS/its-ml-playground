@@ -3,7 +3,7 @@ import pandas as pd
 
 from collections import Counter
 
-def calc_distance(vec1: list, vec2: list, type: str = 'euclid', p: int = 3) -> float:
+def calc_distance(vec1: np.ndarray, vec2: np.ndarray, type: str = 'euclid', p: int = 3):
     '''
         Function for calculate distance between two vectors. Notes: if p = 1, equal to euclidean distance; if p = 2, equal to manhattan distance
 
@@ -12,11 +12,17 @@ def calc_distance(vec1: list, vec2: list, type: str = 'euclid', p: int = 3) -> f
         Output: result of distance in floating point
     '''
     if type == 'euclid':
-        return np.sqrt(np.sum((vec1 - vec2)**2))
+        return np.sqrt(np.sum((np.subtract(vec1, vec2))**2))
     elif type == 'manhattan':
-        return np.sum(np.abs(vec1 - vec2))
+        return np.sum(np.abs(np.subtract(vec1, vec2)))
     elif type ==  'minkowski':
-        return np.sum(np.abs(vec1 - vec2)**p) ** (1/p)
+        return np.sum(np.abs(np.subtract(vec1, vec2))**p) ** (1/p)
+
+def calc_linkage(linkage_type: str, dist_result: float):
+    if linkage_type == 'complete': # complete linkage
+        return np.max(dist_result)
+    elif linkage_type == 'single': # single linkage
+        return np.min(dist_result)
 
 def load_csv_data(dataset_path: str, x_columns: list, y_columns: str) -> tuple:
     ''' 
