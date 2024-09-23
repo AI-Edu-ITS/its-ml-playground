@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import sys
-from sklearn.metrics.pairwise import euclidean_distances
 
 # enable import from other directory
 sys.path.insert(0, os.getcwd())
@@ -40,7 +39,8 @@ class AgglomerativeClustering:
             # compare to other cluster
             for j in range(num_cluster):
                 j_element = member_clusters[key_cluster[j]]
-                dist = euclidean_distances(x_data[i_element], x_data[j_element])
+                for x1, x2 in zip(x_data[i_element], x_data[j_element]):
+                    dist = calc_distance(x1, x2, self.dist_metric, self.p)
                 dist_linkage = calc_linkage(self.linkage_type, dist)
                 final_distance[i,j] = dist_linkage
         return final_distance
