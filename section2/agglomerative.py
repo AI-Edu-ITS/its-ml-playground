@@ -1,10 +1,11 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import os
 import sys
 from sklearn.metrics.pairwise import euclidean_distances
+
 # enable import from other directory
 sys.path.insert(0, os.getcwd())
-
 from tools.utils import calc_distance, calc_linkage
 
 class AgglomerativeClustering:
@@ -50,7 +51,6 @@ class AgglomerativeClustering:
         temp_labels = np.zeros((n_samples - 1, 4))
 
         for i in range(n_samples - 1):
-            # num_cluster = len(member_clusters)
             key_cluster = list(member_clusters.keys())
             cluster_distance = self.calc_cluster_distance(member_clusters, x_data)
             _, temp_min_x, temp_min_y = self.argmin(cluster_distance)
@@ -63,18 +63,18 @@ class AgglomerativeClustering:
             temp_labels[i, 3] = len(member_clusters[temp_x]) + len(member_clusters[temp_y])
             # merge cluster
             member_clusters[i + n_samples] = member_clusters[temp_x] + member_clusters[temp_y]
-            del member_clusters[temp_x]
-            del member_clusters[temp_y]
-        self.final_labels = temp_labels
-        return self.final_labels
+            member_clusters.pop(temp_x)
+            member_clusters.pop(temp_y)
+        self.centroids = temp_labels
+        return self.centroids
 
     def predict(self, x_data: np.ndarray):
         n_samples, _ = x_data.shape
         preds = np.zeros((n_samples))
         cluster_members = dict([(i,[i]) for i in range(n_samples)])
         for i in range(n_samples - self.n_clusters):
-            x = int(self.final_labels[i,0])
-            y = int(self.final_labels[i,1])
+            x = int(self.centroids[i,0])
+            y = int(self.centroids[i,1])
             cluster_members[n_samples + i] = cluster_members[x] + cluster_members[y]
             del cluster_members[x]
             del cluster_members[y]
@@ -83,3 +83,11 @@ class AgglomerativeClustering:
             samples_in_cluster = cluster_members[keys[i]]
             preds[samples_in_cluster] = i
         return np.array(preds, dtype=np.int64)
+
+def visualize_preds_agglo(x_test: np.ndarray, labels: np.ndarray):
+    classes = np.unique(labels)
+    for idx in classes:
+        plt.scatter(x_test[labels == idx, 0], x_test[labels == idx, 1], s=80, label=f'Cluster {idx}')
+    plt.title('Visualize Cluster from Agglomerative Clustering')
+    plt.legend()
+    plt.show()

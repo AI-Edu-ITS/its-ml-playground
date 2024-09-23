@@ -5,7 +5,7 @@ import sys
 # enable import from outside folder
 sys.path.insert(0, os.getcwd())
 
-from agglomerative import AgglomerativeClustering
+from agglomerative import AgglomerativeClustering, visualize_preds_agglo, visualize_dendogram_agglo
 from kmeans import KMeans, visualize_preds_kmeans, visualize_elbow_kmeans
 from tools.utils import load_csv_data, train_test_split
 from tools.clustering_metrics import evaluation_report
@@ -22,6 +22,7 @@ if __name__ == '__main__':
 
     # agglomerative args
     parser.add_argument('-li', '--linkage', help='Define Linkage type (complete, single)', default='complete', type=str)
+    parser.add_argument('-dl', '--data_limit', help='Only in Agglomerative Clustering, Limit number of data used in training due to slow speed', default=70, type=int)
 
     # misc args
     parser.add_argument('-dm', '--dist_metric', help='Distance metric used (euclid, manhattan, minkowski)', type=str, default='euclid')
@@ -45,7 +46,7 @@ if __name__ == '__main__':
         elif args.algo == 'agglo':
             # we limit the data only for agglomerative clustering due its slower compared to kmeans
             # TODO: distance still used sklearn approach, need to change to handcrafted only for agglomerative
-            x_data = x_data[:40, :]
+            x_data = x_data[:args.data_limit, :]
             agglo_pred = AgglomerativeClustering(args.n_cluster, args.linkage, args.dist_metric)
             labels = agglo_pred.fit(x_data)
             result = agglo_pred.predict(x_data)
@@ -57,3 +58,10 @@ if __name__ == '__main__':
             result = kmeans_pred.predict(x_test)
             visualize_preds_kmeans(x_test, result, centroid)
             visualize_elbow_kmeans(x_data)
+        elif args.algo == 'agglo':
+            x_data = x_data[:args.data_limit, :]
+            agglo_pred = AgglomerativeClustering(args.n_cluster, args.linkage, args.dist_metric)
+            centroids = agglo_pred.fit(x_data)
+            result = agglo_pred.predict(x_data)
+            visualize_preds_agglo(x_data, result)
+            visualize_dendogram_agglo(centroids)
