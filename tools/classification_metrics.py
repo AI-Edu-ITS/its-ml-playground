@@ -24,17 +24,16 @@ def calc_mae(preds: np.ndarray, y_test: np.ndarray) -> float:
 
 def calc_r2_score(preds: np.ndarray, y_test: np.ndarray) -> float:
     '''
-        Function to calculate R-Squared Error for Linear Regression. this function needs
-        to calculate Sum of Squares of the Residuals (SSres) and calculate Sum of Squares Total (SStot)
+        Function to calculate R-Squared Error for Linear Regression
 
         Input: list of predictions, y_test data
         
         Output: r2-square result
     '''
-    ssr = np.sum(np.square((preds - y_test)))
-    sst = np.sum(np.square((y_test - np.mean(y_test))))
-    r2_score = 1 - (ssr/sst)
-    return round(r2_score, 3)
+    sse = sum((preds - y_test)**2)
+    tse = (len(y_test) - 1) * np.var(y_test, ddof=1)
+    r2_score = np.mean(1 - (sse / tse))
+    return r2_score
 
 def calc_accuracy(preds: np.ndarray, y_test: np.ndarray) -> float:
     '''
