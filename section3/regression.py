@@ -12,8 +12,8 @@ class SimpleLinearRegression():
         self.intercept = None
     
     def fit(self, x_train: np.ndarray, y_train: np.ndarray):
-        x_train_mean = x_train.mean()
-        y_train_mean = y_train.mean()
+        x_train_mean = np.mean(x_train)
+        y_train_mean = np.mean(y_train)
 
         # calculate slope & intercept
         num = np.sum((x_train - x_train_mean) * (y_train - y_train_mean))
@@ -32,6 +32,8 @@ def visualize_simple_regression(x_train: np.ndarray, y_train: np.ndarray, x_test
     # plot scatter
     plt.scatter(x_test, y_test, label='Value')
     plt.plot(x_test, result, color='red', marker='o', label='Simple Linear Regression Line')
+    plt.title('Linear Regression Visualization')
+    plt.legend()
     plt.xlabel('X-Test Data')
     plt.ylabel('Prediction Res')
     plt.show()
