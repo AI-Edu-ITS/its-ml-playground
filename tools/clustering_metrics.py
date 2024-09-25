@@ -92,7 +92,12 @@ def calc_silhouette_score(x_data: np.ndarray, y_data: np.ndarray, dist_metric: s
     mean_score = score['silhouette_score'].mean()
     return round(mean_score,3)
 
-def evaluation_report(x_data: np.ndarray, y_data: np.ndarray, dist_metric: str = 'euclid'):
+def evaluation_report(algo: str, x_data: np.ndarray, y_data: np.ndarray, dist_metric: str = 'euclid'):
+    if algo == 'kmeans':
+        type_algo = 'K-Means Clustering'
+    elif algo == 'agglo':
+        type_algo = 'Agglomerative Clustering'
+    print(f'Clustering Evaluation for {type_algo} Algorithm')
     print(f'Silhouette Score = {calc_silhouette_score(x_data, y_data, dist_metric)}')
     print(f'Calinski-Harabasz Index = {calc_calinski_index(x_data, y_data)}')
     print(f'Davies-Bouldin Index = {calc_davies_index(x_data, y_data, dist_metric)}')

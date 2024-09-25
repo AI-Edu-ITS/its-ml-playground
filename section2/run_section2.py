@@ -42,14 +42,14 @@ if __name__ == '__main__':
             kmeans_pred = KMeans(args.n_cluster, args.iter)
             centroid, inertia = kmeans_pred.fit(x_data)
             result = kmeans_pred.predict(x_test)
-            evaluation_report(x_test, result, args.dist_metric)
+            evaluation_report(args.algo, x_test, result, args.dist_metric)
         elif args.algo == 'agglo':
             # we limit the data only for agglomerative clustering due its slow speed compared to kmeans
             x_data = x_data[:args.data_limit, :]
             agglo_pred = AgglomerativeClustering(args.n_cluster, args.linkage, args.dist_metric)
             labels = agglo_pred.fit(x_data)
             result = agglo_pred.predict(x_data)
-            evaluation_report(x_data, result, args.dist_metric)
+            evaluation_report(args.algo, x_data, result, args.dist_metric)
     elif args.mode == 'vis':
         if args.algo == 'kmeans':
             kmeans_pred = KMeans(args.n_cluster, args.iter, args.dist_metric)
