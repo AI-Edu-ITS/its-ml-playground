@@ -38,10 +38,15 @@ class AgglomerativeClustering:
             i_element = member_clusters[key_cluster[i]]
             # compare to other cluster
             for j in range(num_cluster):
+                temp_dist = 0.
+                num_iter_dist = 0
                 j_element = member_clusters[key_cluster[j]]
                 for x1, x2 in zip(x_data[i_element], x_data[j_element]):
                     dist = calc_distance(x1, x2, self.dist_metric, self.p)
-                dist_linkage = calc_linkage(self.linkage_type, dist)
+                    temp_dist += dist
+                    num_iter_dist += 1
+                temp_dist /= num_iter_dist
+                dist_linkage = calc_linkage(self.linkage_type, temp_dist)
                 final_distance[i,j] = dist_linkage
         return final_distance
     

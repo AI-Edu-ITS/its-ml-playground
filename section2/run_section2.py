@@ -5,7 +5,7 @@ import sys
 # enable import from outside folder
 sys.path.insert(0, os.getcwd())
 
-from agglomerative import AgglomerativeClustering, visualize_preds_agglo, visualize_elbow_agglo
+from agglomerative import AgglomerativeClustering, visualize_preds_agglo
 from kmeans import KMeans, visualize_preds_kmeans, visualize_elbow_kmeans
 from tools.utils import load_csv_data, train_test_split
 from tools.clustering_metrics import evaluation_report
@@ -63,4 +63,3 @@ if __name__ == '__main__':
             centroids = agglo_pred.fit(x_data)
             result = agglo_pred.predict(x_data)
             visualize_preds_agglo(x_data, result)
-            visualize_elbow_agglo(x_data, args.n_cluster)
