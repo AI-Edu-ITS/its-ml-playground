@@ -43,7 +43,7 @@ def calc_accuracy(preds: np.ndarray, y_test: np.ndarray) -> float:
 
         Output: accuracy result
     '''
-    acc = np.sum(np.equal(preds, y_test)) / len(y_test)
+    acc = np.mean(np.equal(preds, y_test))
     return round(acc * 100, 3)
 
 def calc_error_rate(preds: np.ndarray, y_test: np.ndarray) -> float:
@@ -54,7 +54,7 @@ def calc_error_rate(preds: np.ndarray, y_test: np.ndarray) -> float:
 
         Output: error rate result
     '''
-    error_rate = np.sum(np.not_equal(preds, y_test)) / len(y_test)
+    error_rate = np.mean(np.not_equal(preds, y_test))
     return round(error_rate * 100, 3)
 
 def calc_precision(false_positive: float, true_positive: float) -> float:

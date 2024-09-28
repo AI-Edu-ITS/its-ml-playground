@@ -25,9 +25,9 @@ def choose_activation(x_data: np.ndarray, activation: str, state: str):
     return result
 
 # softmax (forward pass and its backward pass)
-def softmax(x_data: np.ndarray, axis: int = -1) -> np.ndarray:
-    e_x = np.exp(x_data - np.max(x_data))
-    return e_x / np.sum(e_x, axis=axis, keepdims=True)
+def softmax(x_data: np.ndarray, axis: int = -1, keepdims: bool = True) -> np.ndarray:
+    e_x: np.ndarray = np.exp(x_data - np.max(x_data))
+    return e_x / e_x.sum()
 
 def softmax_derivative(x_data: np.ndarray) -> np.ndarray:
     return softmax(x_data) * (1 - softmax(x_data))
@@ -37,11 +37,11 @@ def sigmoid(x_data: np.ndarray) -> np.ndarray:
     return 1. / (1. + np.exp(-x_data * 1.0))
 
 def sigmoid_derivative(x_data: np.ndarray) -> np.ndarray: # gradient calc in sigmoid
-    return sigmoid(x_data) * (1 - sigmoid(x_data))
+    return x_data * (1 - x_data)
 
 # relu (forward pass and its backward pass)
 def relu(x_data: np.ndarray) -> np.ndarray:
-    return np.maximum(0, x_data)
+    return x_data * (x_data > 0)
 
 def relu_derivative(x_data: np.ndarray) -> np.ndarray: # gradient calc in relu
     return 1. * (x_data > 0)

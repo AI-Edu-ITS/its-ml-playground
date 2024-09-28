@@ -30,22 +30,26 @@ if __name__ == '__main__':
     parser.add_argument('-rg', '--regularization', help='Define regularization', default=0.01, type=float)
 
     # ann args
-    parser.add_argument('-hl', '--hidden_layer', help='Define hidden layer of the network', default=4, type=int)
-    parser.add_argument('-ac', '--activation', help='Define activation in mlp (sigmoid, relu, tanh, softmax)', default='relu', type=str)
+    parser.add_argument('-hl', '--hidden_layer', help='Define hidden layer of the network', default=10, type=int)
+    parser.add_argument('-ac', '--activation', help='Define activation in mlp (sigmoid, relu, tanh, softmax)', default='sigmoid', type=str)
 
     args = parser.parse_args()
 
     #define dataset
     # You can always change which columns you want to run (choose at least 2 columns with 1 column as y value)
     if args.algo == 'svm' or args.algo == 'logistic':
-        dataset_path = './shop_customer_dataset.csv'
+        dataset_path = './dataset/shop_customer_dataset.csv'
         x_columns = ['Annual Income ($)','Spending Score (1-100)','Work Experience','Family Size']
         y_columns = 'Gender'
     else:
-        dataset_path = './dataset/whr_dataset.csv'
-        x_columns = ['Family','Health (Life Expectancy)','Economy (GDP per Capita)','Freedom','Trust (Government Corruption)','Generosity']
-        y_columns = 'Region'
+        dataset_path = './dataset/abalone_dataset.csv'
+        x_columns = ['Length', 'Diameter', 'Height', 'Whole Weight', 'Shucked Weight', 'Viscera Weight', 'Shell Weight', 'Rings']
+        y_columns = 'Gender'
     x_data, y_data = load_csv_data(dataset_path, x_columns, y_columns)
+    if args.algo == 'ann':
+        # we limit the data to prevent long training
+        x_data = x_data[:500, :]
+        y_data = y_data[:500]
     x_train, y_train, x_test, y_test = train_test_split(x_data, y_data, args.train_split)
 
     if args.mode == 'predict':
@@ -64,6 +68,12 @@ if __name__ == '__main__':
             ann_preds = MLPClassifier(input_size, args.hidden_layer, output_size, args.learning_rate, args.iter, args.activation, args.verbose)
             ann_preds.fit(x_train, y_train)
             result = ann_preds.predict(x_test)
+            # ann for sklearn
+            from sklearn.neural_network import MLPClassifier as MLP
+            ann_sk = MLP(max_iter=args.iter, hidden_layer_sizes=args.hidden_layer, batch_size=32)
+            ann_sk.fit(x_train, y_train)
+            result_sk = ann_sk.predict(x_test)
+            evaluation_report(args.algo, result_sk, y_test)
         elif args.algo == 'svm':
             svm_preds = SVMNoKernel(args.iter, args.learning_rate, args.regularization)
             svm_preds.fit(x_train, y_train)

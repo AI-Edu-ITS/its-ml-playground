@@ -6,7 +6,7 @@ import sys
 # Enable import outside directory
 sys.path.insert(0, os.getcwd())
 
-from tools.activations import choose_activation, softmax, softmax_derivative
+from tools.activations import choose_activation
 from tools.loss import SquareLoss
 
 class MLPClassifier: 
@@ -44,22 +44,22 @@ class MLPClassifier:
     
     # Define Backpropagation process algoritm
     def backpropagation(self, x_data: np.ndarray):
-        delta_t = []
+        delta_out = []
         
-        # Stage 1 - Error: OutputLayer
+        # Error: OutputLayer
         error_val = self.output - self.output_l2
-        delta_t = -1 * error_val * choose_activation(self.output_l2, self.activation, 'backward')
+        delta_out = -1 * error_val * choose_activation(self.output_l2, self.activation, 'backward')
         
-        # Stage 2 - Update weights OutputLayer and HiddenLayer
+        # Update weights OutputLayer and HiddenLayer
         for i in range(self.hidden_layer):
             for j in range(self.output_layer):
-                self.output_weights[i][j] -= self.lr * (delta_t[j] * self.output_l1[i])
-                self.output_bias[j] -= (self.lr * delta_t[j])
+                self.output_weights[i][j] -= self.lr * (delta_out[j] * self.output_l1[i])
+                self.output_bias[j] -= (self.lr * delta_out[j])
 
-        # Stage 3 - Error: HiddenLayer
-        delta_hidden = np.matmul(self.output_weights, delta_t) * choose_activation(self.output_l1, self.activation, 'backward')
+        # Error: HiddenLayer
+        delta_hidden = np.matmul(self.output_weights, delta_out) * choose_activation(self.output_l1, self.activation, 'backward')
 
-        # Stage 4 - Update weights HiddenLayer and InputLayer(x)
+        # Update weights HiddenLayer and InputLayer(x)
         for i in range(self.output_layer):
             for j in range(self.hidden_layer):
                 self.hidden_weights[i][j] -= self.lr * (delta_hidden[j] * x_data[i])
@@ -70,11 +70,14 @@ class MLPClassifier:
         my_predictions = []
         
         # Just doing Forward Propagation
-        forward = np.matmul(x_test, self.hidden_weights) + self.hidden_bias
-        forward = np.matmul(forward, self.output_weights) + self.output_bias
+        layer_1 = np.dot(x_test, self.hidden_weights) + self.hidden_bias
+        out_1 = choose_activation(layer_1, self.activation, 'forward')
+        layer_2 = np.dot(out_1, self.output_weights) + self.output_bias
+        out_2 = choose_activation(layer_2, self.activation, 'forward')
         
-        for i in forward:
+        for i in out_2:
             my_predictions.append(max(enumerate(i), key=lambda x:x[1])[0])
+        print(my_predictions)
                 
         return np.array(my_predictions)
     
@@ -107,7 +110,7 @@ class MLPClassifier:
                 temp_l2 = np.dot(self.output_l1, self.output_weights) + self.output_bias.T
                 self.output_l2 = choose_activation(temp_l2, self.activation, 'forward')
                 
-                # Stage 2 - One-Hot-Encoding
+                # One-Hot-Encoding
                 self.output = self.one_hot_labels[y_train[idx]]
                 
                 for i in range(self.output_layer):
@@ -131,8 +134,6 @@ class MLPClassifier:
                 
             self.hidden_weight_loss.append(self.hidden_weights)
             self.output_weight_loss.append(self.output_weights)
-            
-        # self.show_err_graphic(error_array,epoch_array)
         
         # Print weight Hidden layer acquire during training
         if self.verbose == True:

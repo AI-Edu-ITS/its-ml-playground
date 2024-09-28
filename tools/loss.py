@@ -1,12 +1,12 @@
 import numpy as np
 from tools.classification_metrics import calc_accuracy
 
-def binary_cross_entropy_loss(preds: np.ndarray, y_test: np.ndarray, eps: float) -> float:
+def binary_cross_entropy_loss(preds: np.ndarray, y_test: np.ndarray) -> float:
     '''
         For only non exclusive class or maximum 2 class only loss (for example class 0 and 1 or class True and False)
     '''
-    y1 = y_test * np.log(preds + eps)
-    y2 = (1 - y_test) * np.log(1 - preds + eps)
+    y1 = y_test * np.log(preds)
+    y2 = (1 - y_test) * np.log(1 - preds)
     return -np.mean(y1 + y2)
 
 def categorical_cross_entropy_loss(preds: np.ndarray, y_test: np.ndarray) -> float:
