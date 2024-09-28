@@ -10,7 +10,7 @@ from ann import MLPClassifier, visualize_loss
 from logistic_regression import LogisticRegression, MultiLogisticRegression, visualize_logits_loss
 from svm import SVMNoKernel, visualize_svm_result
 from tools.classification_metrics import evaluation_report
-from tools.utils import load_csv_data, train_test_split, one_hot_label
+from tools.utils import load_csv_data, train_test_split
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('Section 4 Argument Parser')
@@ -21,17 +21,18 @@ if __name__ == '__main__':
     parser.add_argument('-it', '--iter', help='Define number of iteration or epoch', default=100, type=int)
     parser.add_argument('-bs', '--batch_size', help='Define batch size for process', default=32, type=int)
     parser.add_argument('-rs', '--random_seed', help='Define random seed for initialization', default=42, type=int)
+    parser.add_argument('-ac', '--activation', help='Define activation in mlp (sigmoid, relu, tanh, softmax)', default='sigmoid', type=str)
 
     # logistic regression args
     parser.add_argument('-lr', '--learning_rate', help='Define learning rate for Logistic Regression', default=0.01, type=float)
-    parser.add_argument('-eps', '--epsilon', help='Define number of error rate threshold for Logistic Regression algorithm', default=0.9, type=float)
+    parser.add_argument('-ep', '--epsilon', help='Define number of error rate threshold for Logistic Regression algorithm', default=1e-8, type=float)
+    parser.add_argument('-th', '--threshold', help='Define threshold for pick prediction', default=0.5, type=int)
 
     # svm args
     parser.add_argument('-rg', '--regularization', help='Define regularization', default=0.01, type=float)
 
     # ann args
     parser.add_argument('-hl', '--hidden_layer', help='Define hidden layer of the network', default=10, type=int)
-    parser.add_argument('-ac', '--activation', help='Define activation in mlp (sigmoid, relu, tanh, softmax)', default='sigmoid', type=str)
 
     args = parser.parse_args()
 
@@ -53,43 +54,26 @@ if __name__ == '__main__':
     x_train, y_train, x_test, y_test = train_test_split(x_data, y_data, args.train_split)
 
     if args.mode == 'predict':
-        # WARNING: USE LOGISTIC REGRESSION ONLY FOR 2 CLASS PREDICTION!!!
         if args.algo == 'logistic':
-            logits_preds = LogisticRegression(args.learning_rate, args.iter, args.epsilon, args.verbose)
+            logits_preds = LogisticRegression(args.learning_rate, args.iter, args.threshold, args.epsilon, args.activation, args.verbose)
             logits_preds.fit(x_train, y_train)
             result = logits_preds.predict(x_test)
-        elif args.algo == 'multi_logistic':
-            multi_logits_preds = MultiLogisticRegression(args.learning_rate, args.iter, args.batch_size, args.random_seed, args.verbose)
-            multi_logits_preds.fit(x_train, y_train)
-            result = multi_logits_preds.predict(x_test)
         elif args.algo == 'ann':
             input_size = x_train.shape[1]
             output_size = len(np.unique(y_train))
             ann_preds = MLPClassifier(input_size, args.hidden_layer, output_size, args.learning_rate, args.iter, args.activation, args.verbose)
             ann_preds.fit(x_train, y_train)
             result = ann_preds.predict(x_test)
-            # ann for sklearn
-            from sklearn.neural_network import MLPClassifier as MLP
-            ann_sk = MLP(max_iter=args.iter, hidden_layer_sizes=args.hidden_layer, batch_size=32)
-            ann_sk.fit(x_train, y_train)
-            result_sk = ann_sk.predict(x_test)
-            evaluation_report(args.algo, result_sk, y_test)
         elif args.algo == 'svm':
             svm_preds = SVMNoKernel(args.iter, args.learning_rate, args.regularization)
             svm_preds.fit(x_train, y_train)
             result = svm_preds.predict(x_test)
-            # sklearn
-            from sklearn.svm import SVC
-            skmodel = SVC()
-            skmodel.fit(x_train, y_train)
-            sk_predictions = skmodel.predict(x_test)
-            evaluation_report(args.algo, sk_predictions, y_test)
         evaluation_report(args.algo, result, y_test)
     elif args.mode =='vis':
-        if args.algo == 'logistic' or args.algo == 'multi_logistic':
-            multi_logits_preds = MultiLogisticRegression(args.learning_rate, args.iter)
-            multi_logits_preds.fit(x_train, y_train)
-            visualize_logits_loss(multi_logits_preds.loss_list)
+        if args.algo == 'logistic':
+            logits_preds = LogisticRegression(args.learning_rate, args.iter, args.threshold, args.epsilon, args.activation, args.verbose)
+            logits_preds.fit(x_train, y_train)
+            visualize_logits_loss(logits_preds.loss_list)
         elif args.algo == 'svm':
             svm_preds = SVMNoKernel(args.iter, args.learning_rate, args.regularization)
             svm_preds.fit(x_data, y_data)

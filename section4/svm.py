@@ -17,7 +17,6 @@ class SVMNoKernel():
         self.weight = np.zeros(n_features)
         self.bias = 0
 
-        y_preds = np.where(y_train <= 0, -1, 1)
         for _ in range(self.iter):
             # gradient descent
             for idx, x in enumerate(x_train):

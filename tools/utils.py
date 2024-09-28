@@ -63,7 +63,7 @@ def classes_to_int(category_list: list) -> list:
                 new_category_list.append(j)
     return new_category_list
 
-def train_test_split(x_data: np.ndarray, y_data: np.ndarray, train_size: float = 0.7) -> tuple:
+def train_test_split(x_data: np.ndarray, y_data: np.ndarray, train_size: float = 0.7):
     '''
         Function to split data into training and testing
 

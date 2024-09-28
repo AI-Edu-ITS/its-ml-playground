@@ -6,7 +6,8 @@ import sys
 # Enable import from other directory
 sys.path.insert(0, os.getcwd())
 
-from tools.loss import log_loss, categorical_cross_entropy_loss
+from tools.loss import binary_cross_entropy_loss
+from tools.activations import choose_activation
 
 class LogisticRegression():
     '''
@@ -16,44 +17,55 @@ class LogisticRegression():
 
         y=σ(β1x1+...+βnxn + b)
     '''
-    def __init__(self, learning_rate: float = 0.01, iteration: int = 100, threshold: float= 0.5, epsilon: float = 1e-9, verbose: bool = False):
+    def __init__(self, learning_rate: float = 0.01, iteration: int = 100, threshold: float = 0.5, epsilon: float = 1e-8, activation: str = 'sigmoid', verbose: bool = True):
         self.lr = learning_rate
-        self.iter = iteration
-        self.eps = epsilon
+        self.epochs = iteration
         self.threshold = threshold
+        self.epsilon = epsilon
+        self.activation = activation
         self.verbose = verbose
-        self.weight = None
+        self.weight = np.ndarray
         self.bias = None
-        self.loss_list = {}
+        self.loss_list = []
+
+    def forward_pass(self, x_data: np.ndarray) -> np.ndarray:
+        temp_layer = np.dot(x_data, self.weight) + self.bias
+        out_layer = choose_activation(temp_layer, self.activation, 'forward')
+        return out_layer
+    
+    def backward_pass(self, x_data: np.ndarray, y_data: np.ndarray, result: np.ndarray):
+        n_samples, _ = x_data.shape
+        # grad computation
+        d_weight = np.dot(x_data.T, np.subtract(result,y_data))
+        d_weight = np.array([np.mean(grad) for grad in d_weight])
+        d_bias = np.sum(np.subtract(result, y_data))
+        # grad scale
+        d_weight *= 1 / float(n_samples)
+        d_bias *= 1 / float(n_samples)
+        # update weight and bias
+        self.weight -= self.lr * d_weight
+        self.bias -= self.lr * d_bias
     
     def fit(self, x_train: np.ndarray, y_train: np.ndarray):
-        n_samples, n_features = x_train.shape
+        _, n_features = x_train.shape
         self.weight = np.zeros(n_features)
-        self.bias = 0
+        self.bias = 0.0
 
         # gradient descent
-        for i in range(self.iter):
-            temp_class_pred = np.dot(x_train, self.weight) + self.bias
-            # apply sigmoid activation
-            y_pred = self.sigmoid_activation(temp_class_pred)
-            d_weight = 1 / float(n_samples) * np.dot(x_train.T, (y_pred - y_train))
-            d_bias = 1 / float(n_samples) * np.sum((y_pred - y_train))
-            self.weight -= self.lr * d_weight
-            self.bias -= self.lr * d_bias 
-
-            # compute loss
-            loss = log_loss(y_pred, y_train, self.eps)
-            self.loss_list[i] = loss
+        for epoch in range(self.epochs):
+            # do forward pass
+            out_result = self.forward_pass(x_train)
+            # calc loss
+            loss = binary_cross_entropy_loss(out_result, y_train, self.epsilon)
+            self.loss_list.append(loss)
+            # backward pass
+            self.backward_pass(x_train, y_train, out_result)
             if self.verbose == True:
-                print(f'Loss in iteration {i} = {loss}')
+                print(f'Loss in Epoch {epoch} = {self.loss_list[epoch]}')
 
     def predict(self, x_test: np.ndarray) -> np.ndarray:
-        temp_y = np.dot(x_test, self.weight) + self.bias
-        y_preds = self.sigmoid_activation(temp_y) >= self.threshold
-        return np.array(y_preds)
-    
-    def sigmoid_activation(self, x_data: np.ndarray) -> np.ndarray:
-        return 1. / (1. + np.exp(-x_data)).reshape(-1,1)
+        preds = self.forward_pass(x_test)
+        return np.round(preds)
 
 class MultiLogisticRegression():
     '''
@@ -79,7 +91,7 @@ class MultiLogisticRegression():
         for i in range(1, self.iter + 1):
             # gradient descent for loss
             preds = self.calc_gradient_descent(x_train)
-            loss = categorical_cross_entropy_loss(preds, y_train)
+            loss = binary_cross_entropy_loss(preds, y_train)
             if self.verbose == True:
                 print(f'Iteration {i} loss = {loss}')
             self.loss_list[i] = loss
