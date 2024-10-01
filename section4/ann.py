@@ -57,7 +57,7 @@ class MLPClassifier:
                 self.output_bias[j] -= (self.lr * delta_out[j])
 
         # Error: HiddenLayer
-        delta_hidden = np.matmul(self.output_weights, delta_out) * choose_activation(self.output_l1, self.activation, 'backward')
+        delta_hidden = np.dot(self.output_weights, delta_out) * choose_activation(self.output_l1, self.activation, 'backward')
 
         # Update weights HiddenLayer and InputLayer(x)
         for i in range(self.output_layer):
@@ -77,9 +77,10 @@ class MLPClassifier:
         
         for i in out_2:
             my_predictions.append(max(enumerate(i), key=lambda x:x[1])[0])
-        print(my_predictions)
+        if self.verbose == True:
+            print('Class preds = ', my_predictions)
                 
-        return np.array(my_predictions)
+        return np.array(my_predictions, dtype=np.int8)
     
     # turn labels into 0 1 array formats and out as same as index get
     def one_hot_encode_label(self, y_data: np.ndarray) -> dict:
