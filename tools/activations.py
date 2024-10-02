@@ -34,10 +34,12 @@ def softmax_derivative(x_data: np.ndarray) -> np.ndarray:
 
 # sigmoid (forward pass and its backward pass)
 def sigmoid(x_data: np.ndarray) -> np.ndarray:
+    # supress overflow warning in exponent computation
+    x_data = np.clip(x_data, -709.78, 709.78)
     return 1. / (1. + np.exp(-x_data * 1.0))
 
 def sigmoid_derivative(x_data: np.ndarray) -> np.ndarray: # gradient calc in sigmoid
-    return x_data * (1 - x_data)
+    return sigmoid(x_data) * (1. - sigmoid(x_data))
 
 # relu (forward pass and its backward pass)
 def relu(x_data: np.ndarray) -> np.ndarray:

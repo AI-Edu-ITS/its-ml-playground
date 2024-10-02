@@ -5,9 +5,12 @@ def binary_cross_entropy_loss(preds: np.ndarray, y_data: np.ndarray, eps: float 
     '''
         For only non exclusive class or maximum 2 class only loss (for example class 0 and 1 or class True and False)
     '''
-    y1 = np.sum((-np.log(preds + eps) * y_data))
-    y2 = (-np.log(1 - preds + eps)) * (1 - y_data)
-    return np.mean(y1 + y2)
+    preds = preds.reshape(-1,1)
+    y_data = y_data.reshape(-1,1)
+    preds = np.clip(preds, eps, 1 - eps)
+    y1 = (1 - y_data) * np.log(1 - preds + eps)
+    y2 = y_data * np.log(preds + eps)
+    return -np.mean(y1 + y2, axis=0)
 
 def categorical_cross_entropy_loss(preds: np.ndarray, y_test: np.ndarray) -> float:
     '''
