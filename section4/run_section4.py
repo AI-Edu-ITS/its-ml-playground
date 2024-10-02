@@ -7,7 +7,7 @@ import sys
 sys.path.insert(0, os.getcwd())
 
 from ann import MLPClassifier, visualize_loss
-from logistic_regression import LogisticRegression, MultiLogisticRegression, visualize_logits_loss
+from logistic_regression import LogisticRegression, visualize_activation_logistic
 from svm import SVMNoKernel, visualize_svm_result
 from tools.classification_metrics import evaluation_report
 from tools.utils import load_csv_data, train_test_split
@@ -55,6 +55,9 @@ if __name__ == '__main__':
 
     if args.mode == 'predict':
         if args.algo == 'logistic':
+            # TODO: fix loss and activation in logistc regression (impact calculation)
+            # TODO: in sigmoid --> impact overflow in exponent
+            # TODO: in tanh and relu --> impact in log calc, value will nan
             logits_preds = LogisticRegression(args.learning_rate, args.iter, args.threshold, args.epsilon, args.activation, args.verbose)
             logits_preds.fit(x_train, y_train)
             result = logits_preds.predict(x_test)
@@ -71,9 +74,8 @@ if __name__ == '__main__':
         evaluation_report(args.algo, result, y_test)
     elif args.mode =='vis':
         if args.algo == 'logistic':
-            logits_preds = LogisticRegression(args.learning_rate, args.iter, args.threshold, args.epsilon, args.activation, args.verbose)
-            logits_preds.fit(x_train, y_train)
-            visualize_logits_loss(logits_preds.loss_list)
+            data_rand = np.linspace(-12, 12, 200)
+            visualize_activation_logistic(data_rand)
         elif args.algo == 'svm':
             svm_preds = SVMNoKernel(args.iter, args.learning_rate, args.regularization)
             svm_preds.fit(x_data, y_data)
@@ -83,6 +85,6 @@ if __name__ == '__main__':
         elif args.algo == 'ann':
             input_size = x_train.shape[1]
             output_size = len(np.unique(y_train))
-            ann_preds = MLPClassifier(input_size, args.hidden_size, output_size, args.learning_rate, args.iter, -1, -1, args.activation)
+            ann_preds = MLPClassifier(input_size, args.hidden_layer, output_size, args.learning_rate, args.iter, args.activation, args.verbose)
             ann_preds.fit(x_train, y_train)
             visualize_loss(ann_preds.epoch_list, ann_preds.error_list)
