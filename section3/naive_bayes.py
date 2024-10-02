@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 class GaussianNaiveBayes():
     '''
@@ -30,10 +31,10 @@ class GaussianNaiveBayes():
         self.classes = np.unique(y_train)
         self.num_classes = len(self.classes)
         # define new empty-one matrix with size num_classes x num_features and it should store float data type 32 bit
-        self.mean = np.ones((self.num_classes, n_features), dtype=np.float32)
-        self.variance = np.ones((self.num_classes, n_features), dtype=np.float32)
+        self.mean = np.ones((self.num_classes, n_features), dtype=np.float128)
+        self.variance = np.ones((self.num_classes, n_features), dtype=np.float128)
         # define new empty-one matrix for store prior probability value 
-        self.priors = np.ones(self.num_classes, dtype=np.float32)
+        self.priors = np.ones(self.num_classes, dtype=np.float128)
 
         for i, c in enumerate(self.classes):
             temp_x_class = x_train[np.equal(y_train, c)]
@@ -47,14 +48,24 @@ class GaussianNaiveBayes():
         return a * b
 
     def calc_posterior_probability(self, x_test: np.ndarray):
-        posterior_list = []
-
-        for i, c in enumerate(self.classes):
-            prior = np.log(self.priors[i])
-            posterior = np.sum(np.log(self.calc_gaussian_likelihood(i, x_test)))
-            posterior_list.append(prior + posterior)
+        posterior_list = np.zeros((len(self.classes)))
+        for idx, _ in enumerate(self.classes):
+            prior = np.log(self.priors[idx])
+            posterior = np.sum(np.log(self.calc_gaussian_likelihood(idx, x_test)))
+            posterior_list[idx] = prior + posterior
         return self.classes[np.argmax(posterior_list)]
     
     def predict(self, x_test: np.ndarray) -> np.array:
-        preds = [self.calc_posterior_probability(x) for x in x_test]
-        return np.array(preds)
+        preds = np.zeros((len(x_test)))
+        for x_idx, x_data in enumerate(x_test):
+            res = self.calc_posterior_probability(x_data)
+            preds[x_idx] = res
+        return preds
+
+    def predict_proba(self, x_test: np.ndarray) -> np.ndarray:
+        preds_proba = np.zeros((len(x_test), self.num_classes))
+        for x_idx, x_data in enumerate(x_test):
+            res = self.calc_posterior_probability(x_data)
+            for class_idx, class_label in enumerate(self.classes):
+                preds_proba[x_idx, class_idx] = np.mean(np.equal(res, class_label))
+        return preds_proba

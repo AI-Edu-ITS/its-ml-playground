@@ -24,6 +24,7 @@ class DecisionTreeClassifier():
         self.node_root = None
 
     def fit(self, x_train: np.ndarray, y_train: np.ndarray):
+        self.classes = np.unique(y_train)
         # reshape y_train first
         y_train = y_train.reshape(-1,1)
         concat_dataset = np.concatenate((x_train, y_train), axis=1)
@@ -124,11 +125,19 @@ class DecisionTreeClassifier():
         return final_value
     
     def predict(self, x_data: np.ndarray) -> np.ndarray:
-        preds = []
-        for data in x_data:
-            preds.append(self.predict_util(data, self.node_root))
-        return np.array(preds)
-    
+        preds = np.zeros((len(x_data)))
+        for x_idx, x_data in enumerate(x_data):
+            preds[x_idx] = self.predict_util(x_data, self.node_root)
+        return preds
+
+    def predict_proba(self, x_data: np.ndarray) -> np.ndarray:
+        preds_proba = np.zeros((len(x_data), len(self.classes)))
+        for x_idx, x_data in enumerate(x_data):
+            res = self.predict_util(x_data, self.node_root)
+            for class_idx, class_label in enumerate(self.classes):
+                preds_proba[x_idx, class_idx] = np.mean(np.equal(res, class_label))
+        return preds_proba
+
     def predict_util(self, data, node):
         if node.value_leaf_node != None:
             return node.value_leaf_node

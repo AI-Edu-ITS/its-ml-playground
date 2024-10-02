@@ -56,14 +56,17 @@ if __name__ == '__main__':
             knn_preds = kNN(args.k_neighbours, args.dist_metric, args.p_value)
             knn_preds.fit(x_train, y_train)
             result = knn_preds.predict(x_test)
+            print(knn_preds.predict_proba(x_test))
         elif args.algo == 'naive': # for Naïve Bayes algorithm
             naive_preds = GaussianNaiveBayes()
             naive_preds.fit(x_train, y_train)
             result = naive_preds.predict(x_test)
+            print(naive_preds.predict_proba(x_test))
         elif args.algo == 'tree': # for Decision Tree algorithm
             tree_preds = DecisionTreeClassifier(args.criterion, args.max_depth)
             tree_preds.fit(x_train, y_train)
             result = tree_preds.predict(x_test)
+            print(tree_preds.predict_proba(x_test))
         evaluation_report(args.algo, result, y_test)
     # choose visualize
     elif args.mode == 'vis':

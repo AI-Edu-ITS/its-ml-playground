@@ -21,7 +21,7 @@ class SimpleLinearRegression():
         self.slope = num / denom
         self.intercept = y_train_mean - self.slope * x_train_mean
     
-    def predict(self, x_test: np.ndarray):
+    def predict(self, x_test: np.ndarray) -> np.ndarray:
         return self.intercept + self.slope * x_test
 
 def visualize_simple_regression(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarray, y_test: np.ndarray):

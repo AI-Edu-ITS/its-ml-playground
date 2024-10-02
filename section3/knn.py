@@ -50,7 +50,7 @@ class kNN():
         for x_idx, test_data in enumerate(x_test):
             nearest = self.get_neighbours(test_data)
             for class_idx, class_label in enumerate(self.classes):
-                preds_proba[x_idx, class_idx] = np.sum(np.equal(nearest, class_label)) /self.k_neighbours
+                preds_proba[x_idx, class_idx] = np.mean(np.equal(nearest, class_label))
         return preds_proba
 
 def visualize_knn_best_k(    
