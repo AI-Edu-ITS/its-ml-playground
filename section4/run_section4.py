@@ -55,12 +55,12 @@ if __name__ == '__main__':
 
     if args.mode == 'predict':
         if args.algo == 'logistic':
-            # TODO: fix loss and activation in logistc regression (impact calculation)
-            # TODO: in sigmoid --> impact overflow in exponent
-            # TODO: in tanh and relu --> impact in log calc, value will nan
             logits_preds = LogisticRegression(args.learning_rate, args.iter, args.threshold, args.epsilon, args.activation, args.verbose)
             logits_preds.fit(x_train, y_train)
             result = logits_preds.predict(x_test)
+            if args.verbose == True:
+                print('Class Preds Result = ', result)
+                print('Proba Result = ', logits_preds.predict_proba(x_test))
         elif args.algo == 'ann':
             input_size = x_train.shape[1]
             output_size = len(np.unique(y_train))
