@@ -8,8 +8,8 @@ class SimpleLinearRegression():
         y = dependent variable; β0 = intercept; βi = slope
     '''
     def __init__(self):
-        self.slope = None
-        self.intercept = None
+        self.slope = float
+        self.intercept = float
     
     def fit(self, x_train: np.ndarray, y_train: np.ndarray):
         x_train_mean = np.mean(x_train)
@@ -30,7 +30,7 @@ def visualize_simple_regression(x_train: np.ndarray, y_train: np.ndarray, x_test
     result = lr_preds.predict(x_test)
 
     # plot scatter
-    plt.scatter(x_test, y_test, label='Value')
+    plt.scatter(x_test, y_test, label='Test Data')
     plt.plot(x_test, result, color='red', marker='o', label='Simple Linear Regression Line')
     plt.title('Linear Regression Visualization')
     plt.legend()

@@ -24,7 +24,7 @@ def calc_linkage(linkage_type: str, dist_result: float):
     elif linkage_type == 'single': # single linkage
         return np.min(dist_result)
 
-def load_csv_data(dataset_path: str, x_columns: list, y_columns: str) -> tuple:
+def load_csv_data(dataset_path: str, x_columns: list, y_columns: str):
     ''' 
         Function for loading dataset from csv file, Only read several columns need to process
 
