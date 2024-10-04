@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import sys
+from collections import Counter
 
 # Enable import from other directory
 sys.path.insert(0, os.getcwd())
@@ -21,7 +22,7 @@ class DecisionTreeClassifier():
         self.criterion = criterion
         self.max_depth = max_depth
         self.min_samples_split = min_samples_split
-        self.node_root = None
+        self.node_root = Node()
 
     def fit(self, x_train: np.ndarray, y_train: np.ndarray):
         self.classes = np.unique(y_train)
@@ -33,11 +34,11 @@ class DecisionTreeClassifier():
     def construct_node_tree(self, dataset: np.ndarray, node_depth: int):
         x_data = dataset[:,:-1]
         y_data = dataset[:,-1]
-        _, cols = x_data.shape
+        _, n_features = x_data.shape
 
         # check is depth equal or less than maximum depth defined before
         if node_depth <= self.max_depth:
-            temp_data = self.split_left_right_data(cols, dataset)
+            temp_data = self.split_left_right_data(n_features, dataset)
             if temp_data['gain'] > 0:
                 left_node_tree = self.construct_node_tree(temp_data['left_data'], node_depth + 1)
                 right_node_tree = self.construct_node_tree(temp_data['right_data'], node_depth + 1)
@@ -80,8 +81,8 @@ class DecisionTreeClassifier():
         return temp_data
 
     def split_data(self, dataset: np.ndarray, feat_idx: int, threshold: float):
-        left_data = np.array([row for row in dataset if row[feat_idx] <= threshold])
-        right_data = np.array([row for row in dataset if row[feat_idx] > threshold])
+        left_data = np.array([row for row in dataset if row[feat_idx] <= threshold], dtype=np.float128)
+        right_data = np.array([row for row in dataset if row[feat_idx] > threshold], dtype=np.float128)
         return left_data, right_data
 
     # for choose criterion in decision tree, you can choose between entropy or gini. We will get shannon information gain
@@ -95,57 +96,36 @@ class DecisionTreeClassifier():
         return gain
 
     def gini_criterion(self, y_data: np.ndarray) -> float:
-        classes = np.unique(y_data)
-        num_y_data = len(y_data)
-        temp_label = {}
-        final_value = 0.0
-        for y in y_data:
-            if y in temp_label:
-                temp_label[y] += 1
-            else:
-                temp_label[y] = 1
-        for n in classes:
-            proba = temp_label[n] / num_y_data
-            final_value += proba * proba
-        return 1 - final_value
+        gini_gain = 0
+        for class_data in self.classes:
+            temp_labels = y_data[np.equal(y_data, class_data)]
+            proba_ratio = len(temp_labels) / len(y_data)
+            gini_gain += (proba_ratio * proba_ratio)
+        return 1 - gini_gain
 
     def entropy_criterion(self, y_data: np.ndarray):
-        classes = np.unique(y_data)
-        num_y_data = len(y_data)
-        temp_label = {}
-        final_value = 0.0
-        for y in y_data:
-            if y in temp_label:
-                temp_label[y] += 1
-            else:
-                temp_label[y] = 1
-        for n in classes:
-            proba = temp_label[n] / num_y_data
-            final_value += (-proba) * (np.log2(proba))
-        return final_value
+        entropy_gain = 0
+        for class_data in self.classes:
+            temp_labels = y_data[np.equal(y_data, class_data)]
+            proba_ratio = len(temp_labels) / len(y_data)
+            entropy_gain += (-proba_ratio * np.log2(proba_ratio))
+        return entropy_gain
     
     def predict(self, x_data: np.ndarray) -> np.ndarray:
         preds = np.zeros((len(x_data)))
-        for x_idx, x_data in enumerate(x_data):
-            preds[x_idx] = self.predict_util(x_data, self.node_root)
+        for x_idx, x in enumerate(x_data):
+            print(x_idx,x)
+            preds[x_idx] = self.make_preds(x, self.node_root)
         return preds
 
-    def predict_proba(self, x_data: np.ndarray) -> np.ndarray:
-        preds_proba = np.zeros((len(x_data), len(self.classes)))
-        for x_idx, x_data in enumerate(x_data):
-            res = self.predict_util(x_data, self.node_root)
-            for class_idx, class_label in enumerate(self.classes):
-                preds_proba[x_idx, class_idx] = np.mean(np.equal(res, class_label))
-        return preds_proba
-
-    def predict_util(self, data, node):
+    def make_preds(self, data: np.ndarray, node):
         if node.value_leaf_node != None:
             return node.value_leaf_node
-
-        if data[node.col_index] <= node.threshold:
-            return self.predict_util(data, node.left_node)
         else:
-            return self.predict_util(data, node.right_node)
+            if data[node.col_index] <= node.threshold:
+                return self.make_preds(data, node.left_node)
+            else:
+                return self.make_preds(data, node.right_node)
 
 class Node():
     '''
