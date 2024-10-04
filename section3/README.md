@@ -40,6 +40,7 @@ In addition, K-Nearest Neighbor algorithm accept following arguments:
 - `--k_neighbours` : Number of neighbours. Default value is **5**
 - `--dist_metric` : Distance measurement method. You can choose between `euclid` for using [Euclidean Distance](https://en.wikipedia.org/wiki/Euclidean_distance), `manhattan` for using [Manhattan Distance](https://en.wikipedia.org/wiki/Taxicab_geometry), or `minkowski` for using [Minkowski Distance](https://en.wikipedia.org/wiki/Minkowski_distance). Default value is **euclid**
 - `--p` : P value for Minkowski Distance. Default value is **3**
+- `--verbose` : Define to print prediction and predict probability output or not print all of it. Default is **False**
 
 Running above command will produce classification evaluation metrics score result like this screenshot.
 
@@ -72,6 +73,7 @@ In addition, Decision Tree algorithm accept following arguments:
 - `--algo` : Name of algorithm used (choose `tree` for Decision Tree). **This argument is necessary**
 - `--criterion` : Choose criterion for training and predict using Decision Tree (choose between `entropy` for using [entropy criterion](https://towardsdatascience.com/entropy-how-decision-trees-make-decisions-2946b9c18c8) and `gini` for using [gini criterion](https://hidir-yesiltepe.medium.com/what-is-gini-impurity-b821dfb63b6e)). Default value is **gini**
 - `--max_depth` : Define maximum depth of Decision Tree. Default value is **5**
+- `--verbose` : Define to print prediction and predict probability output or not print all of it. Default is **False**
 
 Running above command will produce classification metrics evaluation like this screenshot:
 
@@ -102,6 +104,7 @@ In addition, Naïve Bayes algorithm accept following arguments:
 
 - `--mode` : You can choose between `predict` for training and prediction and `vis` for visualization. **This argument is necessary**
 - `--algo` : Name of algorithm used (choose `naive` for Naïve Bayes). **This argument is necessary**
+- `--verbose` : Define to print prediction and predict probability output or not print all of it. Default is **False**
 
 Running above command will produce classification metrics evaluation like this screenshot:
 

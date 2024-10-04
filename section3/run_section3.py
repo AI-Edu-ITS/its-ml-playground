@@ -16,6 +16,7 @@ if __name__ == '__main__':
     parser.add_argument('-m', '--mode', help='Choose mode for running (predict, vis)', required=True, type=str)
     parser.add_argument('-a', '--algo', help='Run specific algo (regression, knn, naive, tree)', type=str)
     parser.add_argument('-ts', '--train_split', help='Define training percentage over testing percentage', default=0.7, type=float)
+    parser.add_argument('-v', '--verbose', help='Define is log printed in console or not', default=False, type=bool)
 
     # linear regression specific
     parser.add_argument('-lr', '--learning_rate', help='Define learning rate for Linear Regression', default=0.0001, type=float)
@@ -56,17 +57,20 @@ if __name__ == '__main__':
             knn_preds = kNN(args.k_neighbours, args.dist_metric, args.p_value)
             knn_preds.fit(x_train, y_train)
             result = knn_preds.predict(x_test)
-            print(knn_preds.predict_proba(x_test))
+            if args.verbose == True:
+                print('class prediction probability = ', knn_preds.predict_proba(x_test))
         elif args.algo == 'naive': # for Naïve Bayes algorithm
             naive_preds = GaussianNaiveBayes()
             naive_preds.fit(x_train, y_train)
             result = naive_preds.predict(x_test)
-            print(naive_preds.predict_proba(x_test))
+            if args.verbose == True:
+                print('class prediction result = ', result)
+                print('class prediction probability = ', naive_preds.predict_proba(x_test))
         elif args.algo == 'tree': # for Decision Tree algorithm
             tree_preds = DecisionTreeClassifier(args.criterion, args.max_depth)
             tree_preds.fit(x_train, y_train)
             result = tree_preds.predict(x_test)
-            print(tree_preds.predict_proba(x_test))
+            # print(tree_preds.predict_proba(x_test))
         evaluation_report(args.algo, result, y_test)
     # choose visualize
     elif args.mode == 'vis':
