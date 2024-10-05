@@ -82,6 +82,14 @@ class MLPClassifier:
                 
         return np.array(my_predictions, dtype=np.int8)
     
+    def predict_proba(self, x_data: np.ndarray) -> np.ndarray:
+        # Just doing Forward Propagation
+        layer_1 = np.dot(x_data, self.hidden_weights) + self.hidden_bias
+        out_1 = choose_activation(layer_1, self.activation, 'forward')
+        layer_2 = np.dot(out_1, self.output_weights) + self.output_bias
+        out_2 = choose_activation(layer_2, self.activation, 'forward')
+        return out_2
+    
     # turn labels into 0 1 array formats and out as same as index get
     def one_hot_encode_label(self, y_data: np.ndarray) -> dict:
         labels_dict = {}

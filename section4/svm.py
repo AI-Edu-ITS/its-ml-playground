@@ -3,7 +3,7 @@ import numpy as np
 
 class SVMNoKernel():
     '''
-        Class for Support Vector Machine, this implementation is svm without kernels
+        Class for Support Vector Machine, this implementation is svm without kernels and only support 2 class
     '''
     def __init__(self, iterations: int = 100, learning_rate: float = 0.01, C: float = 0.01):
         self.iter = iterations
@@ -22,7 +22,6 @@ class SVMNoKernel():
             for idx, x in enumerate(x_train):
                 if y_train[idx] * (np.dot(x, self.weight) - self.bias) >= 1:
                     d_weight = 2 * self.regularization * self.weight
-                    d_bias = 0
                 else:
                     d_weight = 2 * self.regularization * self.weight - np.dot(x, y_train[idx])
                     d_bias = y_train[idx]

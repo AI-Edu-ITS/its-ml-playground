@@ -37,7 +37,7 @@ class LogisticRegression():
         n_samples, _ = x_data.shape
         # grad computation
         d_weight = np.matmul(x_data.T, np.subtract(result, y_data)) / n_samples
-        d_bias = np.sum(np.subtract(result, y_data)) / n_samples
+        d_bias = np.mean(np.subtract(result, y_data))
         # update weight and bias
         self.weight -= self.lr * d_weight
         self.bias -= self.lr * d_bias
