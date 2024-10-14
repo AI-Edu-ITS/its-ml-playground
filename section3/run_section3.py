@@ -58,6 +58,7 @@ if __name__ == '__main__':
             knn_preds.fit(x_train, y_train)
             result = knn_preds.predict(x_test)
             if args.verbose == True:
+                print('class prediction result = ', result)
                 print('class prediction probability = ', knn_preds.predict_proba(x_test))
         elif args.algo == 'naive': # for Naïve Bayes algorithm
             naive_preds = GaussianNaiveBayes()
@@ -70,7 +71,8 @@ if __name__ == '__main__':
             tree_preds = DecisionTreeClassifier(args.criterion, args.max_depth)
             tree_preds.fit(x_train, y_train)
             result = tree_preds.predict(x_test)
-            # print(tree_preds.predict_proba(x_test))
+            if args.verbose == True:
+                print('class prediction result = ', result)
         evaluation_report(args.algo, result, y_test)
     # choose visualize
     elif args.mode == 'vis':

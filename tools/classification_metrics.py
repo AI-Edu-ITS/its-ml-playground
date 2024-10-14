@@ -8,7 +8,8 @@ def calc_mse(preds: np.ndarray, y_test: np.ndarray) -> float:
 
         Output: mse result
     '''
-    mse = np.mean(np.square(y_test - preds))
+    subs = np.subtract(y_test, preds)
+    mse = np.mean(np.square(subs))
     return round(mse, 3)
 
 def calc_mae(preds: np.ndarray, y_test: np.ndarray) -> float:
@@ -19,8 +20,9 @@ def calc_mae(preds: np.ndarray, y_test: np.ndarray) -> float:
         
         Output: mae result
     '''
-    mape = np.mean(np.abs((y_test - preds)))
-    return round(mape, 3)
+    subs = np.subtract(y_test, preds)
+    mae = np.mean(np.abs(subs))
+    return round(mae, 3)
 
 def calc_r2_score(preds: np.ndarray, y_test: np.ndarray) -> float:
     '''
@@ -77,6 +79,16 @@ def calc_recall(false_negative: float, true_positive: float) -> float:
     '''
     return round(true_positive / (true_positive + false_negative), 3)
 
+def calc_specificity(true_negative: float, false_positive: float) -> float:
+    '''
+        Function for calculate specificity with equation -> recall = TN / (TN + FP)
+
+        Input: true negative value, false positive value
+
+        Output: specificity result
+    '''
+    return round(true_negative / (true_negative + false_positive), 3)
+
 def calc_f1score(preds: np.ndarray, y_test: np.ndarray):
     '''
         Function for calculate f1-score with equation -> f1-score = (2 * precision * recall) / (precision + recall)
@@ -85,21 +97,24 @@ def calc_f1score(preds: np.ndarray, y_test: np.ndarray):
 
         Output: f1-score result
     '''
-    true_positive, _, false_positive, false_negative = np.ravel(calc_confusion_matrix(preds, y_test))
+    true_positive, true_negative, false_positive, false_negative = np.ravel(calc_confusion_matrix(preds, y_test))
     # special case of f1 score
     if true_positive == 0 and false_negative == 0 and false_positive == 0:
         precision_score = 1
         recall_score = 1
+        specificity_score = 1
         f1_score = 1
     elif false_negative == 0 or false_positive == 0 or true_positive == 0:
         precision_score = 0
         recall_score = 0
+        specificity_score = 0
         f1_score = 0
     else:
         precision_score = calc_precision(false_positive, true_positive)
         recall_score = calc_recall(false_negative, true_positive)
+        specificity_score = calc_specificity(true_negative, false_positive)
         f1_score = (2 * precision_score * recall_score) / (precision_score + recall_score)
-    return round(precision_score, 3), round(recall_score, 3), round(f1_score, 3)
+    return round(precision_score, 3), round(recall_score, 3), round(specificity_score, 3),round(f1_score, 3)
 
 def calc_confusion_matrix(preds: np.ndarray, y_test: np.ndarray) -> np.ndarray:
     '''
@@ -127,9 +142,10 @@ def evaluation_report(algo: str, preds: np.ndarray, y_test: np.ndarray) -> float
         print(f'Evaluation Report For {algo} Algorithm')
         print(f'Accuracy = {calc_accuracy(preds, y_test)} %')
         print(f'Error Rate = {calc_error_rate(preds, y_test)} %')
-        precision, recall, f1score = calc_f1score(preds, y_test)
+        precision, recall, specificity, f1score = calc_f1score(preds, y_test)
         print(f'Precision = {precision}')
         print(f'Recall = {recall}')
+        print(f'Specificity = {specificity}')
         print(f'F1-Score = {f1score}')
         print(f'Confusion Matrix =\n{calc_confusion_matrix(preds, y_test)}')
     else: 
