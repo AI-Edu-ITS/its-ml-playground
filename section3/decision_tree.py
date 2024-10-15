@@ -112,9 +112,8 @@ class DecisionTreeClassifier():
         return entropy_gain
     
     def predict(self, x_data: np.ndarray) -> np.ndarray:
-        preds = np.zeros((len(x_data)))
+        preds = np.zeros((len(x_data)), dtype=np.uint32)
         for x_idx, x in enumerate(x_data):
-            print(x_idx,x)
             preds[x_idx] = self.make_preds(x, self.node_root)
         return preds
 

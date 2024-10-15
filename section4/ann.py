@@ -77,8 +77,6 @@ class MLPClassifier:
         
         for i in out_2:
             my_predictions.append(max(enumerate(i), key=lambda x:x[1])[0])
-        if self.verbose == True:
-            print('Class preds = ', my_predictions)
                 
         return np.array(my_predictions, dtype=np.int8)
     

@@ -38,7 +38,7 @@ class kNN():
         return neighbours
 
     def predict(self, x_test: np.ndarray) -> np.array:
-        preds = np.zeros(len(x_test))
+        preds = np.zeros(len(x_test), dtype=np.uint32)
         for idx, test_data in enumerate(x_test):
             nearest = self.get_neighbours(test_data)
             major = max(set(nearest), key=nearest.count)

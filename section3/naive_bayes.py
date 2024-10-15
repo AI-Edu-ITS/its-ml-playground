@@ -56,7 +56,7 @@ class GaussianNaiveBayes():
         return posterior_list
     
     def predict(self, x_test: np.ndarray) -> np.array:
-        preds = np.zeros((len(x_test)))
+        preds = np.zeros((len(x_test)), dtype=np.uint32)
         for x_idx, x_data in enumerate(x_test):
             res = self.calc_posterior_probability(x_data)
             preds[x_idx] = self.classes[np.argmax(res)]
