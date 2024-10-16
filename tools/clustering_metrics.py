@@ -28,11 +28,10 @@ def calc_calinski_index(x_data: np.ndarray, y_data: np.ndarray) -> float:
     wcss = 0
     for n_cluster in range(n_clusters):
         i = np.where(np.equal(y_data, n_cluster))[0]
-        ni = len(i)
         centroid[n_cluster, :] = np.mean(x_data[i], axis=0)
-        bcss += ni * np.linalg.norm(centroid[n_cluster] - x_mean)**2
+        bcss += len(i) * np.power(np.linalg.norm(centroid[n_cluster] - x_mean),2)
         for x in x_data[i, :]:
-            wcss += np.linalg.norm(centroid[n_cluster] - x)**2
+            wcss += np.power(np.linalg.norm(centroid[n_cluster] - x),2)
     calinski_harabasz_res = bcss / wcss * (n_samples - n_clusters) / (n_clusters - 1)
     return round(calinski_harabasz_res, 3)
 
