@@ -1,4 +1,5 @@
 import argparse
+import numpy as np
 import os
 import sys
 
@@ -17,12 +18,12 @@ if __name__ == '__main__':
     parser.add_argument('-ts', '--train_split', help='Define training percentage over testing percentage', default=0.7, type=float)
     
     # kmeans args
-    parser.add_argument('-nc', '--n_cluster', help='Define number of cluster for kmeans', default=2, type=int)
+    # parser.add_argument('-nc', '--n_cluster', help='Define number of cluster for kmeans', default=2, type=int)
     parser.add_argument('-it', '--iter', help='Define number of iteration of training in Kmeans', default=300, type=int)
 
     # agglomerative args
     parser.add_argument('-li', '--linkage', help='Define Linkage type (complete, single)', default='complete', type=str)
-    parser.add_argument('-dl', '--data_limit', help='Only in Agglomerative Clustering, Limit number of data used in training due to slow speed', default=70, type=int)
+    parser.add_argument('-dl', '--data_limit', help='Only in Agglomerative Clustering, Limit number of data used in training due to slow speed', default=200, type=int)
 
     # misc args
     parser.add_argument('-dm', '--dist_metric', help='Distance metric used (euclid, manhattan, minkowski)', type=str, default='euclid')
@@ -39,17 +40,18 @@ if __name__ == '__main__':
 
     if args.mode == 'predict':
         if args.algo == 'kmeans':
-            kmeans_pred = KMeans(args.n_cluster, args.iter)
+            kmeans_pred = KMeans(len(np.bincount(y_data)), args.iter)
             centroid, inertia = kmeans_pred.fit(x_data)
             result = kmeans_pred.predict(x_test)
-            evaluation_report(args.algo, x_test, result, args.dist_metric)
+            print(result)
+            evaluation_report(args.algo, x_test, result, y_test, args.dist_metric)
         elif args.algo == 'agglo':
             # we limit the data only for agglomerative clustering due its slow speed compared to kmeans
             x_data = x_data[:args.data_limit, :]
-            agglo_pred = AgglomerativeClustering(args.n_cluster, args.linkage, args.dist_metric)
+            agglo_pred = AgglomerativeClustering(len(np.bincount(y_data)), args.linkage, args.dist_metric)
             labels = agglo_pred.fit(x_data)
             result = agglo_pred.predict(x_data)
-            evaluation_report(args.algo, x_data, result, args.dist_metric)
+            evaluation_report(args.algo, x_data, result, y_data, args.dist_metric)
     elif args.mode == 'vis':
         if args.algo == 'kmeans':
             kmeans_pred = KMeans(args.n_cluster, args.iter)

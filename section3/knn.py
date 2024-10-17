@@ -37,7 +37,7 @@ class kNN():
             neighbours.append(dist[i][1])
         return neighbours
 
-    def predict(self, x_test: np.ndarray) -> np.array:
+    def predict(self, x_test: np.ndarray) -> np.ndarray:
         preds = np.zeros(len(x_test), dtype=np.uint32)
         for idx, test_data in enumerate(x_test):
             nearest = self.get_neighbours(test_data)
@@ -45,7 +45,7 @@ class kNN():
             preds[idx] = major
         return preds
     
-    def predict_proba(self, x_test: np.ndarray) -> np.array:
+    def predict_proba(self, x_test: np.ndarray) -> np.ndarray:
         preds_proba = np.zeros((len(x_test), self.num_classes))
         for x_idx, test_data in enumerate(x_test):
             nearest = self.get_neighbours(test_data)

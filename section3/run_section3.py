@@ -57,16 +57,18 @@ if __name__ == '__main__':
             knn_preds = kNN(args.k_neighbours, args.dist_metric, args.p_value)
             knn_preds.fit(x_train, y_train)
             result = knn_preds.predict(x_test)
+            result_proba = knn_preds.predict_proba(x_test)
             if args.verbose == True:
                 print('class prediction result = ', result)
-                print('class prediction probability = ', knn_preds.predict_proba(x_test))
+                print('class prediction probability = ', result_proba)
         elif args.algo == 'naive': # for Naïve Bayes algorithm
             naive_preds = GaussianNaiveBayes()
             naive_preds.fit(x_train, y_train)
             result = naive_preds.predict(x_test)
+            result_proba = naive_preds.predict_proba(x_test)
             if args.verbose == True:
                 print('class prediction result = ', result)
-                print('class prediction probability = ', naive_preds.predict_proba(x_test))
+                print('class prediction probability = ', result_proba)
         elif args.algo == 'tree': # for Decision Tree algorithm
             tree_preds = DecisionTreeClassifier(args.criterion, args.max_depth)
             tree_preds.fit(x_train, y_train)
