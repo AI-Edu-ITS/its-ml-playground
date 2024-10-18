@@ -48,11 +48,13 @@ if __name__ == '__main__':
     x_train, y_train, x_test, y_test = train_test_split(x_data, y_data, args.train_split)
     
     # choose prediction
+    # TODO: auc score only available in KNN at the moment
     if args.mode == 'predict':
         if args.algo == 'regression': # for Simple Linear Regression algorithm
             lr_preds = SimpleLinearRegression()
             lr_preds.fit(x_train, y_train)
             result = lr_preds.predict(x_test)
+            evaluation_report(args.algo, result, y_test, y_test)
         elif args.algo == 'knn': # for K-Nearest Neighbor algorithm
             knn_preds = kNN(args.k_neighbours, args.dist_metric, args.p_value)
             knn_preds.fit(x_train, y_train)
@@ -61,6 +63,7 @@ if __name__ == '__main__':
             if args.verbose == True:
                 print('class prediction result = ', result)
                 print('class prediction probability = ', result_proba)
+            evaluation_report(args.algo, result, y_test, result_proba)
         elif args.algo == 'naive': # for Naïve Bayes algorithm
             naive_preds = GaussianNaiveBayes()
             naive_preds.fit(x_train, y_train)
@@ -69,13 +72,14 @@ if __name__ == '__main__':
             if args.verbose == True:
                 print('class prediction result = ', result)
                 print('class prediction probability = ', result_proba)
+            evaluation_report(args.algo, result, y_test, y_test)
         elif args.algo == 'tree': # for Decision Tree algorithm
             tree_preds = DecisionTreeClassifier(args.criterion, args.max_depth)
             tree_preds.fit(x_train, y_train)
             result = tree_preds.predict(x_test)
             if args.verbose == True:
                 print('class prediction result = ', result)
-        evaluation_report(args.algo, result, y_test)
+            evaluation_report(args.algo, result, y_test, y_test)
     # choose visualize
     elif args.mode == 'vis':
         if args.algo == 'regression':

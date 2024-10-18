@@ -54,7 +54,7 @@ if __name__ == '__main__':
     x_train, y_train, x_test, y_test = train_test_split(x_data, y_data, args.train_split)
 
     if args.mode == 'predict':
-        if args.algo == 'logistic':
+        if args.algo == 'logistic_regression':
             logits_preds = LogisticRegression(args.learning_rate, args.iter, args.threshold, args.epsilon, args.activation, args.verbose)
             logits_preds.fit(x_train, y_train)
             result = logits_preds.predict(x_test)
@@ -76,9 +76,10 @@ if __name__ == '__main__':
             result = svm_preds.predict(x_test)
             if args.verbose == True:
                 print('Class Preds Result = ', result)
-        evaluation_report(args.algo, result, y_test)
+        # TODO: fill preds proba temporary with y_test
+        evaluation_report(args.algo, result, y_test, y_test)
     elif args.mode =='vis':
-        if args.algo == 'logistic':
+        if args.algo == 'logistic_regression':
             data_rand = np.linspace(-12, 12, 200)
             visualize_activation_logistic(data_rand)
         elif args.algo == 'svm':

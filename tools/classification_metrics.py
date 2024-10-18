@@ -81,13 +81,47 @@ def calc_recall(false_negative: float, true_positive: float) -> float:
 
 def calc_specificity(true_negative: float, false_positive: float) -> float:
     '''
-        Function for calculate specificity with equation -> recall = TN / (TN + FP)
+        Function for calculate specificity with equation -> specificity = TN / (TN + FP)
 
         Input: true negative value, false positive value
 
         Output: specificity result
     '''
     return round(true_negative / (true_negative + false_positive), 3)
+
+def calc_fpr(true_negative: float, false_positive: float) -> float:
+    '''
+        Function for calculate False Positive Rate (fpr) with equation -> fpr = FP / (FP + TN)
+
+        Input: true negative value, false positive value
+
+        Output: fpr result
+    '''
+    return round(false_positive / (false_positive + true_negative), 3)
+
+def calc_auc_score_binary(preds_proba: np.ndarray, y_test: np.ndarray):
+    '''
+        Function to calculate Area Under Curve (AUC) score for binary dataset
+    '''
+    # we define threshold list for calculate fpr and tpr
+    thresh_list = np.arange(0.1, 1, 0.2)
+    tpr_list = np.ones((len(thresh_list)))
+    fpr_list = np.ones((len(thresh_list)))
+    proba_max_list = np.max(preds_proba, axis=1)
+    class_list = np.argmax(preds_proba, axis=1)
+    for idx in range(len(thresh_list)):
+        temp_preds = []
+        temp_y_test = []
+        thresh_idx = np.argwhere(proba_max_list > thresh_list[idx]).reshape(-1,).tolist()
+        for temp_idx in range(len(thresh_idx)):
+            temp_preds.append(class_list[temp_idx])
+            temp_y_test.append(y_test[temp_idx])
+        tp, tn, fp, fn = np.ravel(calc_confusion_matrix_binary(temp_preds, temp_y_test))
+        tpr_list[idx] = calc_recall(fn, tp)
+        fpr_list[idx] = calc_fpr(tn, fp)
+    # calculate auc score with trapezoidal rule
+    auc_score = np.trapz(tpr_list, fpr_list)
+    return abs(round(auc_score, 3)), fpr_list, tpr_list
 
 def calc_f1score_binary(preds: np.ndarray, y_test: np.ndarray):
     '''
@@ -131,16 +165,47 @@ def calc_confusion_matrix_binary(preds: np.ndarray, y_test: np.ndarray) -> np.nd
     false_positive = np.sum(np.bitwise_and(np.equal(y_test, 0), np.equal(preds, 1)))
     return np.array([[true_positive, true_negative], [false_positive, false_negative]])
 
-def calc_confusion_matrix_multi(preds: np.ndarray, y_test: np.ndarray) -> np.ndarray:
+def calc_auc_score_multi(preds_proba: np.ndarray, y_test: np.ndarray, num_class: np.ndarray):
     '''
-        return multiclass confusion matrix for each class with this manner:
-        [TP1, FP1, FN1, TN1]
-        [TP2, FP2, FN2, TN2]
-        ....
-        [TPi, FPi, FNi, TNi]
-        which i represent class of i
+        Function to calculate Area Under Curve (AUC) score for multi class
     '''
-    num_class = np.unique(y_test)
+    thresh_list = np.arange(0.1, 1, 0.2)
+    tpr_list = np.ones((len(thresh_list)))
+    fpr_list = np.ones((len(thresh_list)))
+    proba_max_list = np.max(preds_proba, axis=1)
+    class_list = np.argmax(preds_proba, axis=1)
+    for idx in range(len(thresh_list)):
+        temp_preds = []
+        temp_y_test = []
+        thresh_idx = np.argwhere(proba_max_list > thresh_list[idx]).reshape(-1,).tolist()
+        for temp_idx in range(len(thresh_idx)):
+            temp_preds.append(class_list[temp_idx])
+            temp_y_test.append(y_test[temp_idx])
+        # find tp, fp, fn, tn
+        cm_multi = calc_confusion_matrix_multi(temp_preds, temp_y_test, num_class)
+        cm_val = np.zeros((len(num_class), 4), dtype=np.uint32)
+        # find each tp, fp, fn, tn in each class and save to array
+        for i in range(len(num_class)):
+            cm_val[i,0] = cm_multi[i,i] # tp
+            cm_val[i,1] = np.sum(cm_multi, axis=1)[i] - cm_multi[i,i] # fp
+            cm_val[i,2] = np.sum(cm_multi, axis=0)[i] - cm_multi[i,i] # fn
+            cm_val[i,3] = np.sum(cm_multi) - cm_val[i,0] - cm_val[i,1] - cm_val[i,2] # tn
+        # get sum of all tp, fp, fn, tn
+        summation = np.sum(cm_val, axis=0)
+        sum_tp = summation[0]
+        sum_fp = summation[1]
+        sum_fn = summation[2]
+        sum_tn = summation[3]
+        tpr_list[idx] = calc_recall(sum_fn, sum_tp)
+        fpr_list[idx] = calc_fpr(sum_tn, sum_fp)
+    # calculate auc score with trapezoidal rule
+    auc_score = np.trapz(tpr_list, fpr_list)
+    return abs(round(auc_score, 3)), fpr_list, tpr_list
+
+def calc_confusion_matrix_multi(preds: np.ndarray, y_test: np.ndarray, num_class: np.ndarray) -> np.ndarray:
+    '''
+        return multiclass confusion matrix for each class between predicted compared to actual
+    '''
     # for save confusion matrix each class
     cm_multi = np.zeros((len(num_class), len(num_class)), dtype=np.uint32)
     # put all data first to multi class confusion matrix
@@ -148,12 +213,11 @@ def calc_confusion_matrix_multi(preds: np.ndarray, y_test: np.ndarray) -> np.nda
         cm_multi[preds[idx], y_test[idx]] += 1
     return cm_multi
 
-def calc_f1score_multi(preds: np.ndarray, y_test: np.ndarray):
+def calc_f1score_multi(preds: np.ndarray, y_test: np.ndarray, num_class: np.ndarray):
     '''
         Calculate f1 score for multi class in micro-averaging manner for precision, recall, and specificity
     '''
-    cm_multi = calc_confusion_matrix_multi(preds, y_test)
-    num_class = np.unique(y_test)
+    cm_multi = calc_confusion_matrix_multi(preds, y_test, num_class)
     # for save each tp,fp,fn,tn from each class
     cm_val = np.zeros((len(num_class), 4), dtype=np.uint32)
     # find each tp, fp, fn, tn in each class and save to array
@@ -174,7 +238,7 @@ def calc_f1score_multi(preds: np.ndarray, y_test: np.ndarray):
     f1_score = (2 * precision_score * recall_score) / (precision_score + recall_score)
     return round(precision_score, 3), round(recall_score, 3), round(specificity_score, 3), round(f1_score, 3), cm_multi
 
-def evaluation_report(algo: str, preds: np.ndarray, y_test: np.ndarray) -> float:
+def evaluation_report(algo: str, preds: np.ndarray, y_test: np.ndarray, preds_proba: np.ndarray) -> float:
     '''
         Function for report the evaluation result of supervised algorithm
 
@@ -193,13 +257,21 @@ def evaluation_report(algo: str, preds: np.ndarray, y_test: np.ndarray) -> float
             print(f'Recall = {recall}')
             print(f'Specificity = {specificity}')
             print(f'F1-Score = {f1score}')
+            # TODO: check other algorithm to enable auc score calculation
+            if algo == 'knn':
+                auc_score_binary, _, _ = calc_auc_score_binary(preds_proba, y_test)
+                print(f'AUC Score = {auc_score_binary}')
             print(f'Confusion Matrix =\n{conf_matrix}')
         else:
-            precision, recall, specificity, f1score, cm_multi = calc_f1score_multi(preds, y_test)
+            precision, recall, specificity, f1score, cm_multi = calc_f1score_multi(preds, y_test, num_class)
             print(f'Precision = {precision}')
             print(f'Recall = {recall}')
             print(f'Specificity = {specificity}')
             print(f'F1-Score = {f1score}')
+            # TODO: check other algorithm to enable auc score calculation
+            if algo == 'knn':
+                auc_score_multi, _, _ = calc_auc_score_multi(preds_proba, y_test, num_class)
+                print(f'AUC Score = {auc_score_multi}')
             print(f'Confusion Matrix =\n{cm_multi}')
     else: 
         print(f'Evaluation Report For {algo} Algorithm')
