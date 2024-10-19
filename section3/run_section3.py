@@ -6,7 +6,7 @@ sys.path.insert(0, os.getcwd())
 
 from tools.classification_metrics import evaluation_report
 from decision_tree import DecisionTreeClassifier, visualize_gini_vs_entropy_tree
-from knn import kNN, visualize_knn_best_k
+from knn import kNN, visualize_knn_best_k, visualize_roc_auc_knn
 from naive_bayes import GaussianNaiveBayes
 from regression import SimpleLinearRegression, visualize_simple_regression
 from tools.utils import load_csv_data, train_test_split
@@ -64,6 +64,7 @@ if __name__ == '__main__':
                 print('class prediction result = ', result)
                 print('class prediction probability = ', result_proba)
             evaluation_report(args.algo, result, y_test, result_proba)
+            visualize_roc_auc_knn(result_proba, y_test, y_data)
         elif args.algo == 'naive': # for Naïve Bayes algorithm
             naive_preds = GaussianNaiveBayes()
             naive_preds.fit(x_train, y_train)

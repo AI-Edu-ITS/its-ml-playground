@@ -6,7 +6,7 @@ import sys
 # enable import from another directory
 sys.path.insert(0, os.getcwd())
 
-from tools.classification_metrics import calc_error_rate, calc_accuracy
+from tools.classification_metrics import calc_error_rate, calc_accuracy, calc_auc_score_multi, calc_auc_score_binary
 from tools.utils import calc_distance
 
 class kNN():
@@ -84,4 +84,19 @@ def visualize_knn_best_k(
     ax_err.set_title('Error Rate vs K-Val')
     plt.setp(ax_err, xlabel='K-Val', ylabel='Error Rate')
     print(f'Best Error Rate = {min(error_list)} when K = {error_list.index(min(error_list))}')
+    plt.show()
+
+def visualize_roc_auc_knn(preds_proba: np.ndarray, y_test: np.ndarray, y_data: np.ndarray):
+    # auc_score, fpr_list, tpr_list = calc_auc_score_binary(preds_proba, y_test)
+    num_class = np.unique(y_data)
+    if len(num_class) <= 2:
+        auc_score, fpr_list, tpr_list = calc_auc_score_binary(preds_proba, y_test)
+    else:
+        auc_score, fpr_list, tpr_list = calc_auc_score_multi(preds_proba, y_test, num_class)
+    plt.plot([0,0,1], [0,1,1], color='red', label='Ideal ROC')
+    plt.plot([0,1], [0,1], color='orange', label='Random ROC')
+    plt.plot(tpr_list, fpr_list, color='green', label='Result ROC')
+    plt.legend()
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
     plt.show()

@@ -114,8 +114,8 @@ def calc_auc_score_binary(preds_proba: np.ndarray, y_test: np.ndarray):
         temp_y_test = []
         thresh_idx = np.argwhere(proba_max_list > thresh_list[idx]).reshape(-1,).tolist()
         for temp_idx in range(len(thresh_idx)):
-            temp_preds.append(class_list[temp_idx])
-            temp_y_test.append(y_test[temp_idx])
+            temp_preds.append(class_list[thresh_idx[temp_idx]])
+            temp_y_test.append(y_test[thresh_idx[temp_idx]])
         tp, tn, fp, fn = np.ravel(calc_confusion_matrix_binary(temp_preds, temp_y_test))
         tpr_list[idx] = calc_recall(fn, tp)
         fpr_list[idx] = calc_fpr(tn, fp)
@@ -179,8 +179,8 @@ def calc_auc_score_multi(preds_proba: np.ndarray, y_test: np.ndarray, num_class:
         temp_y_test = []
         thresh_idx = np.argwhere(proba_max_list > thresh_list[idx]).reshape(-1,).tolist()
         for temp_idx in range(len(thresh_idx)):
-            temp_preds.append(class_list[temp_idx])
-            temp_y_test.append(y_test[temp_idx])
+            temp_preds.append(class_list[thresh_idx[temp_idx]])
+            temp_y_test.append(y_test[thresh_idx[temp_idx]])
         # find tp, fp, fn, tn
         cm_multi = calc_confusion_matrix_multi(temp_preds, temp_y_test, num_class)
         cm_val = np.zeros((len(num_class), 4), dtype=np.uint32)
