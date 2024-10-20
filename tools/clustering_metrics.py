@@ -33,8 +33,8 @@ def calc_calinski_index(x_data: np.ndarray, result_class: np.ndarray) -> float:
         centroid[n_cluster, :] = np.mean(x_data[idx], axis=0)
         bcss += len(idx) * np.power(np.linalg.norm(centroid[n_cluster] - x_mean),2)
         for x in x_data[idx, :]:
-            wcss += np.power(np.linalg.norm(centroid[n_cluster] - x),2)
-    calinski_harabasz_res = bcss / wcss * (n_samples - n_clusters) / (n_clusters - 1)
+            wcss += np.power(np.linalg.norm(x - centroid[n_cluster]),2)
+    calinski_harabasz_res = (bcss / (n_clusters - 1)) / (wcss / (n_samples - n_clusters)) 
     return round(calinski_harabasz_res, 3)
 
 def calc_davies_index(x_data: np.ndarray, result_class: np.ndarray, dist_metric: str = 'euclid') -> float:
