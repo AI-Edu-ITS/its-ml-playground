@@ -1,0 +1,55 @@
+cff-version: 1.0.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Fatichah"
+  given-names: "Chastine"
+  orcid: "https://orcid.org/0000-0002-7348-9762"
+- family-names: "Suciati"
+  given-names: "Nanik"
+  orcid: "https://orcid.org/0000-0002-1991-0464"
+- family-names: "Purwitasari"
+  given-names: "Diana"
+  orcid: "https://orcid.org/0000-0001-7000-7628"
+- family-names: "Yuniarti"
+  given-names: "Anny"
+  orcid: "https://orcid.org/0000-0002-3234-4591"
+- family-names: "Hidayati"
+  given-names: "Shintami Chusnul"
+  orcid: "https://orcid.org/0000-0001-5045-4842"
+- family-names: "Navastara"
+  given-names: "Dini Adni"
+  orcid: "https://orcid.org/0000-0002-2934-7193"
+- family-names: "Bihanda"
+  given-names: "Yusuf Gladiensyah"
+  orcid: "https://orcid.org/0000-0001-5633-418X"
+title: "Machine Learning Menggunakan Python"
+version: 1.0.0
+date-released: 2025-03-31
+url: "https://andipublisher.com/produk/detail/machine-learning-menggunakan-python"
+preferred-citation:
+  type: book
+  authors: 
+  - family-names: "Fatichah"
+    given-names: "Chastine"
+    orcid: "https://orcid.org/0000-0002-7348-9762"
+  - family-names: "Suciati"
+    given-names: "Nanik"
+    orcid: "https://orcid.org/0000-0002-1991-0464"
+  - family-names: "Purwitasari"
+    given-names: "Diana"
+    orcid: "https://orcid.org/0000-0001-7000-7628"
+  - family-names: "Yuniarti"
+    given-names: "Anny"
+    orcid: "https://orcid.org/0000-0002-3234-4591"
+  - family-names: "Hidayati"
+    given-names: "Shintami Chusnul"
+    orcid: "https://orcid.org/0000-0001-5045-4842"
+  - family-names: "Navastara"
+    given-names: "Dini Adni"
+    orcid: "https://orcid.org/0000-0002-2934-7193"
+  - family-names: "Bihanda"
+    given-names: "Yusuf Gladiensyah"
+    orcid: "https://orcid.org/0000-0001-5633-418X"
+  publisher: Penerbit Andi
+  place: Sleman, Indonesia
+  year: 2025
