@@ -45,4 +45,15 @@ Please create a new issue in Issues section, add title for the issue, and descri
 
 ## 🔭 Citation
 
-If you use this repository in your works, you can cite this book using available format from right side pane menu of this repository!
+If you use this repository in your works, you can cite this book using available format from right side pane menu of this repository or cite this bibtex entry:
+
+```
+@book{machine_learn_book, 
+    author={Fatichah, Chastine and Suciati, Nanik and Purwitasari, Diana and Yuniarti, Anny and Hidayati, Shintami Chusnul and Navastara, Dini Adni and Bihanda, Yusuf Gladiensyah},
+    title={Machine Learning Menggunakan Python}, 
+    place={Sleman, Indonesia}, 
+    publisher={Penerbit Andi},
+    year={2025},
+    url={https://andipublisher.com/produk/detail/machine-learning-menggunakan-python},
+} 
+```
