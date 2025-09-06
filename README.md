@@ -3,6 +3,8 @@
 This is the official source code from ITS Machine Learning Book Titled **Machine Learning Menggunakan Python**
 
 ## 🚀 Repository Updates
+
+- \[2025.09.06\] We Release Some Python Tutorial Before Deep Dive Into This Book Code Repository In section0 Folder!
 - \[2025.07.18\] Our Google Play Book Version Has Been Released!
 - \[2025.03.31\] Book Has Been Released!
 - \[2024.08.26\] Code Release!
@@ -13,16 +15,18 @@ This is the official source code from ITS Machine Learning Book Titled **Machine
 - Then, you need to clone and initialize this repository. For more details step please follow this tutorial [How to Clone and Retrieve Update from Remote Repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
 - Then, make sure Python already installed in your device. You can download and install Python from [Python Official Website](https://www.python.org). To make sure your Python installation completed you can run this code: `python3 --version` or `python --version`. **Note: Sometimes for MacOS and Linux user, Python is already installed by default.**
 - Install required libraries by write this command in terminal/command prompt in this saved repository folders using `pip3 install requirements.txt` or `pip install requirements.txt`
+- (Optional) If you already familiar with Python and have knowledge about programming, you can jump to [section1](section1/README.md) in this book. If Python is your first language or you are a new programmer, you can start to learn python in [section0](section0/README.md)
 
 ## ❓ How To Use This Repository
 
 You need to follow this tutorial below:
 
-1. [Section 1: Introduction](section1/README.md)
-2. [Section 2: Unsupervised Learning](section2/README.md)
-3. [Section 3: Supervised Learning](section3/README.md)
-4. [Section 4: Supervised Based on Function Learning](section4/README.md)
-5. [Section 5: Semi-Supervised Learning](section5/README.md)
+1. [Section 0: Python Mini Tutorial](section0/README.md)
+2. [Section 1: Introduction](section1/README.md)
+3. [Section 2: Unsupervised Learning](section2/README.md)
+4. [Section 3: Supervised Learning](section3/README.md)
+5. [Section 4: Supervised Based on Function Learning](section4/README.md)
+6. [Section 5: Semi-Supervised Learning](section5/README.md)
 
 ## 🙋 FAQ
 
@@ -34,7 +38,7 @@ Please create a new issue in Issues section, add title for the issue, and descri
 **Important: Before create an issue, please check existing open or closed issue first to avoid same issue being proposed again!!**
 </details>
 
-## 📚 Useful Tutorials
+## 📚 Useful Tutorials About Libraries
 
 - [How to Clone and Retrieve Update from Remote Repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
 - [How to Use Argument Parser in Python](https://docs.python.org/3/howto/argparse.html)
