@@ -5,9 +5,16 @@ This is the official source code from ITS Machine Learning Book Titled **Machine
 ## 🚀 Repository Updates
 
 - \[2025.09.06\] We Release Some Python Tutorial Before Deep Dive Into This Book Code Repository In section0 Folder!
-- \[2025.07.18\] Our Google Play Book Version Has Been Released!
+- \[2025.07.18\] Our Google Play Book Version Has Been Released [In this link](https://books.google.co.id/books?id=lR5xEQAAQBAJ)!
 - \[2025.03.31\] Book Has Been Released!
 - \[2024.08.26\] Code Release!
+
+## ⁉️ Where To Buy Our Book
+
+You can purchase our book through this link:
+
+1. For Hardcopy Book, visit [Tokopedia](https://tk.tokopedia.com/ZSAcqnh9U/)
+2. For Electronic Book Version, visit [Google Play Books](https://books.google.co.id/books?id=lR5xEQAAQBAJ)
 
 ## 🏃 First Run Before Using This Repository
 
