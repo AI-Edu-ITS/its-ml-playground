@@ -1,5 +1,16 @@
 # Lesson 1 Python Basic
 
+We divide this section into this format:
+
+- [Lesson 1 Python Basic](#lesson-1-python-basic)
+  - [Your First Python Code](#your-first-python-code)
+  - [Variables](#variables)
+    - [Basic Variables](#basic-variables)
+    - [How to Write Variables](#how-to-write-variables)
+  - [Data Types](#data-types)
+    - [Writing Data Types](#writing-data-types)
+    - [Data Types Casting](#data-types-casting)
+
 ## Your First Python Code
 
 Write a Hello, World! sentence is pretty easy in Python. You can type this syntax in Python interpreter or inside .py file to produce Hello, World! result
@@ -72,7 +83,7 @@ Python supports multiple variables which commonly found in other programming lan
 | `dict` | Mapping | Dictionary data type, hold key and value data types |
 | `boolean` | Boolean | Hold `True` or `False` value |
 
-## Writing Data Types
+### Writing Data Types
 
 Here are an example of how to write each data type explained before
 
@@ -98,7 +109,7 @@ print(type(a)) # Output: <class 'int'>
 print(type(b)) # Output: <class 'float'>
 ```
 
-## Data Types Casting
+### Data Types Casting
 
 You can change a variable data type by using data type casting like following example
 
